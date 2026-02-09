@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#0B0F16" />
+  <title>404 — Forecast AI</title>
+  <meta name="robots" content="noindex" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+
+  <style>
+    :root{
+      --bg0:#070A10;
+      --bg1:#0B0F16;
+      --panel: rgba(14,20,32,.58);
+      --text:#E8EEF7;
+      --muted:#A9B6C9;
+      --muted2:#7F8CA3;
+      --line:#1B2740;
+      --accent:#53C1FF;
+      --accent2:#7CFFB2;
+      --amber:#FFC56A;
+      --shadow: 0 24px 70px rgba(0,0,0,.55);
+      --shadow2: 0 10px 30px rgba(0,0,0,.45);
+      --r: 18px;
+      --r2: 26px;
+      --max: 900px;
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color:var(--text);
+      min-height:100vh;
+      background:
+        radial-gradient(1200px 800px at 18% 12%, rgba(83,193,255,.12), transparent 56%),
+        radial-gradient(900px 700px at 82% 18%, rgba(124,255,178,.08), transparent 60%),
+        radial-gradient(800px 650px at 50% 100%, rgba(255,197,106,.06), transparent 58%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
+      overflow-x:hidden;
+    }
+
+    #bgCanvas{
+      position:fixed;
+      inset:0;
+      width:100%;
+      height:100%;
+      z-index:-2;
+      opacity:.88;
+      pointer-events:none;
+    }
+
+    .container{ width:min(var(--max), calc(100% - 48px)); margin:0 auto; }
+
+    .frame{
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      padding:70px 0;
+    }
+
+    .card{
+      border-radius: var(--r2);
+      background:
+        radial-gradient(900px 600px at 20% 10%, rgba(83,193,255,.10), transparent 55%),
+        radial-gradient(700px 500px at 80% 0%, rgba(124,255,178,.08), transparent 60%),
+        rgba(14,20,32,.56);
+      border: 1px solid rgba(27,39,64,.82);
+      box-shadow: var(--shadow);
+      padding:22px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:-1px;
+      background: linear-gradient(180deg, rgba(83,193,255,.08), transparent 40%, rgba(124,255,178,.06));
+      pointer-events:none;
+    }
+
+    .top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:12px;
+      position:relative;
+      z-index:1;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight:600;
+      letter-spacing:.2px;
+      color:var(--text);
+      text-decoration:none;
+    }
+
+    .mark{
+      width:30px; height:30px; border-radius:11px;
+      background:
+        radial-gradient(14px 14px at 30% 30%, rgba(124,255,178,.55), transparent 60%),
+        radial-gradient(16px 16px at 70% 60%, rgba(83,193,255,.6), transparent 60%),
+        linear-gradient(135deg, rgba(27,39,64,.92), rgba(14,20,32,.92));
+      border:1px solid rgba(83,193,255,.26);
+      box-shadow: 0 10px 25px rgba(0,0,0,.35);
+    }
+
+    .pill{
+      display:inline-flex; gap:10px; align-items:center;
+      padding:8px 12px; border-radius:999px;
+      border:1px solid rgba(27,39,64,.82);
+      background: rgba(7,10,16,.32);
+      color:var(--muted);
+      font-size:13px; line-height:1;
+      position:relative;
+      z-index:1;
+    }
+
+    .dot{
+      width:8px;height:8px;border-radius:50%;
+      background: radial-gradient(circle at 30% 30%, rgba(124,255,178,1), rgba(124,255,178,.25));
+      box-shadow: 0 0 0 3px rgba(124,255,178,.12);
+    }
+
+    h1{
+      margin:6px 0 0;
+      font-size: 42px;
+      letter-spacing:-.02em;
+      line-height:1.08;
+      position:relative;
+      z-index:1;
+    }
+
+    p{
+      margin:10px 0 0;
+      color:var(--muted);
+      line-height:1.65;
+      max-width:62ch;
+      position:relative;
+      z-index:1;
+    }
+
+    .actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-top:18px;
+      position:relative;
+      z-index:1;
+    }
+
+    a{ color:inherit; text-decoration:none; }
+    .btn{
+      display:inline-flex; align-items:center; gap:10px;
+      padding:11px 14px; border-radius:14px;
+      border:1px solid rgba(27,39,64,.9);
+      background: rgba(14,20,32,.62);
+      color:var(--text);
+      box-shadow: var(--shadow2);
+      transition: transform .15s ease, background .2s ease, border .2s ease;
+      font-weight:600; font-size:14px;
+    }
+    .btn:hover{ transform: translateY(-1px); background: rgba(14,20,32,.8); border-color: rgba(83,193,255,.36); }
+    .btn-primary{
+      background: linear-gradient(135deg, rgba(83,193,255,.18), rgba(124,255,178,.12));
+      border: 1px solid rgba(83,193,255,.40);
+    }
+
+    .fine{
+      margin-top:16px;
+      color:var(--muted2);
+      font-size:13px;
+      position:relative;
+      z-index:1;
+    }
+
+    @media (max-width: 560px){
+      h1{ font-size: 34px; }
+      .card{ padding:18px; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="bgCanvas" aria-hidden="true"></canvas>
+
+  <div class="frame">
+    <div class="container">
+      <div class="card">
+        <div class="top">
+          <a class="brand" href="./" aria-label="Forecast AI Home">
+            <span class="mark" aria-hidden="true"></span>
+            <span>Forecast AI</span>
+          </a>
+          <span class="pill"><span class="dot" aria-hidden="true"></span> Page not found</span>
+        </div>
+
+        <h1>404</h1>
+        <p>
+          This link doesn’t point to a published page. If you were expecting a section of the Forecast AI site,
+          the most reliable path is to start from the homepage or jump directly to the demo request.
+        </p>
+
+        <div class="actions">
+          <a class="btn btn-primary" href="./">Go to homepage</a>
+          <a class="btn" href="./#demo">Request a demo</a>
+          <a class="btn" href="./#catches">What it catches</a>
+        </div>
+
+        <div class="fine">© <span id="year"></span> Forecast AI</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Reuse the same calm forecast-lines idea (lighter than the main page).
+    const canvas = document.getElementById('bgCanvas');
+    const ctx = canvas.getContext('2d', { alpha: true });
+    let w, h, dpr;
+    function resize(){
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = canvas.width = Math.floor(window.innerWidth * dpr);
+      h = canvas.height = Math.floor(window.innerHeight * dpr);
+      canvas.style.width = window.innerWidth + 'px';
+      canvas.style.height = window.innerHeight + 'px';
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    const rand = (a,b)=>a + Math.random()*(b-a);
+    const lines = Array.from({length: 12}, () => ({
+      y: rand(0,1),
+      amp: rand(0.006, 0.02),
+      freq: rand(0.7, 1.2),
+      speed: rand(0.03, 0.09),
+      phase: rand(0, Math.PI*2),
+      alpha: rand(0.03, 0.09)
+    }));
+
+    let t = 0;
+    function draw(){
+      t += 0.01;
+      ctx.clearRect(0,0,w,h);
+      for(const L of lines){
+        const y0 = L.y * h;
+        ctx.save();
+        ctx.globalAlpha = L.alpha;
+        ctx.lineWidth = 1.1 * dpr;
+        const k = (Math.sin(t*0.7 + L.phase) + 1)/2;
+        const c1 = `rgba(83,193,255,${0.45 + 0.20*k})`;
+        const c2 = `rgba(124,255,178,${0.30 + 0.20*(1-k)})`;
+        const mix = ctx.createLinearGradient(0, y0, w, y0);
+        mix.addColorStop(0, 'rgba(0,0,0,0)');
+        mix.addColorStop(0.18, c1);
+        mix.addColorStop(0.62, c2);
+        mix.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.strokeStyle = mix;
+
+        ctx.beginPath();
+        const xOffset = (t * (220 * dpr) * L.speed) % (w + 400*dpr) - 200*dpr;
+        for(let x=0; x<=w; x+= 16*dpr){
+          const nx = (x + xOffset) / w;
+          const y = y0
+            + Math.sin((nx*L.freq*6.283) + t + L.phase) * (L.amp * h)
+            + Math.sin(nx*10 + t*0.9) * (L.amp * 0.3 * h);
+          if (x === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+        ctx.restore();
+      }
+      requestAnimationFrame(draw);
+    }
+    draw();
+  </script>
+</body>
+</html>
+

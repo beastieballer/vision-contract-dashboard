@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#070A10"/>
+      <stop offset="1" stop-color="#0B0F16"/>
+    </linearGradient>
+    <radialGradient id="b1" cx="0.18" cy="0.14" r="0.65">
+      <stop offset="0" stop-color="#53C1FF" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#53C1FF" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="b2" cx="0.84" cy="0.18" r="0.7">
+      <stop offset="0" stop-color="#7CFFB2" stop-opacity="0.14"/>
+      <stop offset="1" stop-color="#7CFFB2" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="b3" cx="0.5" cy="1" r="0.75">
+      <stop offset="0" stop-color="#FFC56A" stop-opacity="0.10"/>
+      <stop offset="1" stop-color="#FFC56A" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="stroke" x1="200" y1="80" x2="980" y2="560" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#53C1FF" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#7CFFB2" stop-opacity="0.85"/>
+    </linearGradient>
+    <linearGradient id="flow" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#000" stop-opacity="0"/>
+      <stop offset="0.25" stop-color="#53C1FF" stop-opacity="0.35"/>
+      <stop offset="0.6" stop-color="#7CFFB2" stop-opacity="0.28"/>
+      <stop offset="0.82" stop-color="#FFC56A" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="b"/>
+      <feColorMatrix in="b" type="matrix"
+        values="1 0 0 0 0
+                0 1 0 0 0
+                0 0 1 0 0
+                0 0 0 0.55 0" result="g"/>
+      <feMerge>
+        <feMergeNode in="g"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#b1)"/>
+  <rect width="1200" height="630" fill="url(#b2)"/>
+  <rect width="1200" height="630" fill="url(#b3)"/>
+
+  <!-- subtle grid -->
+  <g opacity="0.12" stroke="#53C1FF" stroke-width="1">
+    <path d="M0 120H1200M0 240H1200M0 360H1200M0 480H1200"/>
+    <path d="M140 0V630M280 0V630M420 0V630M560 0V630M700 0V630M840 0V630M980 0V630M1120 0V630"/>
+  </g>
+
+  <!-- Brand mark -->
+  <g transform="translate(86 84)">
+    <rect x="0" y="0" width="64" height="64" rx="18" fill="rgba(14,20,32,0.72)" stroke="rgba(83,193,255,0.35)"/>
+    <path d="M22 44V20h22" fill="none" stroke="url(#stroke)" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M22 32h15" fill="none" stroke="url(#stroke)" stroke-width="4.2" stroke-linecap="round"/>
+  </g>
+
+  <!-- Title/Subhead -->
+  <g font-family="Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial" fill="#E8EEF7">
+    <text x="170" y="128" font-size="24" opacity="0.9" font-weight="600">Forecast AI</text>
+    <text x="86" y="230" font-size="64" font-weight="700" letter-spacing="-0.02em">See delays before they cost you.</text>
+    <text x="86" y="280" font-size="22" opacity="0.78">High-signal forecasting for construction operations.</text>
+  </g>
+
+  <!-- Flowing lines motif -->
+  <g filter="url(#glow)" opacity="0.9">
+    <path d="M100 400 C 270 360, 420 460, 610 420 C 780 384, 930 380, 1100 408"
+          fill="none" stroke="url(#flow)" stroke-width="3.2" stroke-linecap="round"/>
+    <path d="M100 450 C 270 410, 430 520, 620 470 C 810 418, 940 430, 1100 468"
+          fill="none" stroke="url(#flow)" stroke-width="2.6" stroke-linecap="round" opacity="0.7"/>
+    <path d="M100 500 C 280 470, 450 560, 640 520 C 820 482, 950 486, 1100 520"
+          fill="none" stroke="url(#flow)" stroke-width="2.2" stroke-linecap="round" opacity="0.55"/>
+  </g>
+
+  <!-- Small principle -->
+  <g font-family="Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial" fill="#A9B6C9" opacity="0.9">
+    <text x="86" y="578" font-size="18">Detect signals • Forecast risk • Alert early</text>
+  </g>
+</svg>
+
