@@ -61,7 +61,7 @@
 
   <!-- Title/Subhead -->
   <g font-family="Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial" fill="#E8EEF7">
-    <text x="170" y="128" font-size="24" opacity="0.9" font-weight="600">Forecast AI; Foreman Ops, OPS</text>
+    <text x="170" y="128" font-size="24" opacity="0.9" font-weight="600">FORECAST Ai : FOREMAN OPS</text>
     <text x="86" y="230" font-size="64" font-weight="700" letter-spacing="-0.02em">See delays before they cost you.</text>
     <text x="86" y="280" font-size="22" opacity="0.78">High-signal forecasting for construction operations.</text>
   </g>
