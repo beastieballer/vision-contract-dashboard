@@ -1,0 +1,24 @@
+{
+  "updatedAt": null,
+  "currency": "USD",
+  "minimum_job": { "residential": 499, "commercial": 1250 },
+  "labor_per_sqft": { "solar": 4.5, "decorative": 5.5, "safety": 7.5, "anti_graffiti": 6.5 },
+  "material_per_sqft_default": 1.1,
+  "material_per_sqft_by_type": {
+    "solar_interior": 1.0,
+    "solar_exterior": 1.2,
+    "decorative_basic": 0.85,
+    "decorative_premium": 5.35,
+    "safety_security_8mil": 1.45
+  },
+  "waste_factor": { "simple": 0.1, "mixed": 0.15, "complex": 0.2 },
+  "removal": { "per_sqft": 2.5, "heavy_adhesive_adder_per_sqft": 1.5, "minimum": 150 },
+  "adders": { "coi_admin": 75, "permit_handling": 150 },
+  "gross_margin_targets": { "good": 0.45, "better": 0.5, "best": 0.55 },
+  "quote_valid_days": 14,
+  "payment_terms": {
+    "residential": { "deposit_pct": 0.5, "balance": "due_on_completion" },
+    "commercial": { "deposit_pct": 0.3, "balance": "net_15_or_due_on_completion_under_2500" }
+  }
+}
+

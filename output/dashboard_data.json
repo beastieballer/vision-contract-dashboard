@@ -1,0 +1,155 @@
+{
+  "timestamp": "2026-02-11T14:32:19.675791",
+  "as_of": "2026-02-11",
+  "summary": {
+    "total_emails": 3,
+    "pending_quotes": 1,
+    "scheduled_jobs": 3,
+    "schedule_conflicts": 0,
+    "outstanding_ar": 15200.0,
+    "inventory_alerts": 1
+  },
+  "emails": [
+    {
+      "id": "email_001",
+      "date": "2026-01-30",
+      "from": "customer@example.com",
+      "subject": "Quote Request - Storefront Glass",
+      "category": "quote_request",
+      "priority": "high",
+      "summary": "Quote Request - Storefront Glass",
+      "action_required": "Generate quote and send proposal"
+    },
+    {
+      "id": "email_002",
+      "date": "2026-01-29",
+      "from": "supplier@glassco.com",
+      "subject": "Order Confirmation - 1/4 Tempered Glass",
+      "category": "supplier_confirmation",
+      "priority": "medium",
+      "summary": "Order Confirmation - 1/4 Tempered Glass",
+      "action_required": "Update inventory forecast"
+    },
+    {
+      "id": "email_003",
+      "date": "2026-01-28",
+      "from": "foreman@vision.com",
+      "subject": "Schedule Change - Job #4521",
+      "category": "schedule_change",
+      "priority": "high",
+      "summary": "Schedule Change - Job #4521",
+      "action_required": "Update crew schedule"
+    }
+  ],
+  "schedule": [
+    {
+      "job_id": "JOB-001",
+      "date": "2026-02-03",
+      "crew": "Crew A",
+      "crew_size": 3,
+      "location": "123 Main St, Baltimore, MD",
+      "job_type": "Storefront Installation",
+      "estimated_hours": 6,
+      "status": "scheduled"
+    },
+    {
+      "job_id": "JOB-002",
+      "date": "2026-02-03",
+      "crew": "Crew B",
+      "crew_size": 2,
+      "location": "456 Oak Ave, Baltimore, MD",
+      "job_type": "Residential Window Replacement",
+      "estimated_hours": 4,
+      "status": "scheduled"
+    },
+    {
+      "job_id": "JOB-003",
+      "date": "2026-02-04",
+      "crew": "Crew A",
+      "crew_size": 3,
+      "location": "789 Elm St, Baltimore, MD",
+      "job_type": "Glass Repair",
+      "estimated_hours": 3,
+      "status": "scheduled"
+    }
+  ],
+  "schedule_conflicts": [],
+  "crew_utilization": {},
+  "invoices": [
+    {
+      "invoice_id": "INV-4521",
+      "job_id": "JOB-001",
+      "date_issued": "2026-01-25",
+      "due_date": "2026-02-24",
+      "amount": 8500.0,
+      "status": "paid",
+      "date_paid": "2026-01-28",
+      "customer": "ABC Corp"
+    },
+    {
+      "invoice_id": "INV-4522",
+      "job_id": "JOB-002",
+      "date_issued": "2026-01-26",
+      "due_date": "2026-02-25",
+      "amount": 3200.0,
+      "status": "overdue",
+      "customer": "John Smith"
+    },
+    {
+      "invoice_id": "INV-4523",
+      "job_id": "JOB-003",
+      "date_issued": "2026-01-29",
+      "due_date": "2026-02-28",
+      "amount": 12000.0,
+      "status": "pending",
+      "customer": "XYZ Building"
+    }
+  ],
+  "ar_aging": {
+    "as_of": "2026-02-11",
+    "currency": "USD",
+    "buckets": {
+      "current": 15200.0,
+      "1_30": 0.0,
+      "31_60": 0.0,
+      "61_90": 0.0,
+      "90_plus": 0.0
+    },
+    "total_outstanding": 15200.0
+  },
+  "inventory": [
+    {
+      "item_id": "GLASS-001",
+      "description": "1/4\" Clear Tempered",
+      "unit": "sheet",
+      "current_stock": 12,
+      "reorder_point": 10,
+      "status": "adequate"
+    },
+    {
+      "item_id": "GLASS-002",
+      "description": "1/2\" Tempered",
+      "unit": "sheet",
+      "current_stock": 3,
+      "reorder_point": 8,
+      "status": "low"
+    },
+    {
+      "item_id": "SEAL-001",
+      "description": "Silicone Sealant",
+      "unit": "tube",
+      "current_stock": 45,
+      "reorder_point": 20,
+      "status": "adequate"
+    }
+  ],
+  "inventory_alerts": [
+    {
+      "item_id": "GLASS-002",
+      "item": "1/2\" Tempered",
+      "current_stock": 3,
+      "reorder_point": 8,
+      "action": "order_immediately"
+    }
+  ]
+}

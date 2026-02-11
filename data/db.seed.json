@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "leads": [
+    {
+      "id": "lead_seed_1",
+      "createdAt": "2026-02-10T12:00:00.000Z",
+      "updatedAt": "2026-02-10T12:00:00.000Z",
+      "status": "NEW",
+      "source": "web",
+      "contact": { "name": "Avery Johnson", "phone": "+14105550123", "email": "avery@example.com" },
+      "location": { "address": "123 Harbor Ave", "city": "Baltimore", "state": "MD" },
+      "jobType": "residential",
+      "sqftEstimate": 180,
+      "filmCategory": "solar_interior",
+      "goals": ["heat", "glare"],
+      "glass": { "dualPane": null, "lowE": null, "notes": "Not sure if low-e. Wants daytime privacy too." },
+      "removalNeeded": false,
+      "access": "ground + step ladder",
+      "notes": "Wants a quick ballpark today; prefers text.",
+      "tags": ["hot_lead"],
+      "history": [
+        { "at": "2026-02-10T12:00:00.000Z", "type": "LEAD_CREATED", "by": "system", "detail": { "source": "web" } }
+      ],
+      "score": 0,
+      "scoreReasons": [],
+      "nextBestAction": null
+    },
+    {
+      "id": "lead_seed_2",
+      "createdAt": "2026-02-10T12:05:00.000Z",
+      "updatedAt": "2026-02-10T12:05:00.000Z",
+      "status": "QUALIFYING",
+      "source": "phone",
+      "contact": { "name": "Morgan Facilities", "phone": "+14435550199", "email": "fm@morganfacilities.com" },
+      "location": { "address": "500 Market St", "city": "Columbia", "state": "MD" },
+      "jobType": "commercial",
+      "sqftEstimate": null,
+      "filmCategory": "unsure",
+      "goals": ["heat", "uv"],
+      "glass": { "dualPane": null, "lowE": null, "notes": "Office building, 2nd floor. Needs COI." },
+      "removalNeeded": null,
+      "access": "interior access, ladder likely",
+      "notes": "Needs options and estimated payback; schedule site walk.",
+      "tags": ["commercial"],
+      "history": [
+        { "at": "2026-02-10T12:05:00.000Z", "type": "LEAD_CREATED", "by": "system", "detail": { "source": "phone" } }
+      ],
+      "score": 0,
+      "scoreReasons": [],
+      "nextBestAction": null
+    }
+  ],
+  "tasks": [],
+  "quotes": [],
+  "messages": []
+}
+

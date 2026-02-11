@@ -1,0 +1,62 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R /F2 5 0 R >> >> /Contents 6 0 R >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+6 0 obj
+<< /Length 2249 >>
+stream
+BT /F2 18 Tf 54 740.00 Td (Window Film Leads -> Workflow \(Prototype\)) Tj ET
+BT /F2 12 Tf 54 718.00 Td (What it is) Tj ET
+BT /F1 10 Tf 54 702.00 Td (Offline prototype that turns window film leads into a repeatable workflow to improve) Tj ET
+BT /F1 10 Tf 54 690.00 Td (conversion and average order value.) Tj ET
+BT /F1 10 Tf 54 678.00 Td (Runs as a static page and stores data in browser localStorage.) Tj ET
+BT /F2 12 Tf 54 662.00 Td (Who it's for) Tj ET
+BT /F1 10 Tf 54 646.00 Td (Window film company owners, sales reps, or office managers handling inbound leads.) Tj ET
+BT /F2 12 Tf 54 630.00 Td (What it does) Tj ET
+BT /F1 10 Tf 54 614.00 Td (- Capture and view lead details with status, goals, and notes.) Tj ET
+BT /F1 10 Tf 54 602.00 Td (- Score leads and show next best action and missing info.) Tj ET
+BT /F1 10 Tf 54 590.00 Td (- Generate follow-up tasks with due times.) Tj ET
+BT /F1 10 Tf 54 578.00 Td (- Produce ballpark quote ranges from sqft, film type, and assumptions.) Tj ET
+BT /F1 10 Tf 54 566.00 Td (- Generate proposal HTML with pricing breakdown.) Tj ET
+BT /F1 10 Tf 54 554.00 Td (- Draft reply messages and copy to clipboard.) Tj ET
+BT /F1 10 Tf 54 542.00 Td (- Export and import the local JSON database.) Tj ET
+BT /F2 12 Tf 54 526.00 Td (How it works) Tj ET
+BT /F1 10 Tf 54 510.00 Td (- UI: index.html with styles.css and windowfilm.css; app.js handles rendering and) Tj ET
+BT /F1 10 Tf 54 498.00 Td (  interactions.) Tj ET
+BT /F1 10 Tf 54 486.00 Td (- Data \(static mode\): app.js reads/writes browser localStorage key wf_db_v1 and seeds) Tj ET
+BT /F1 10 Tf 54 474.00 Td (  sample leads.) Tj ET
+BT /F1 10 Tf 54 462.00 Td (- Optional server: server.js serves static files and exposes /api endpoints for leads,) Tj ET
+BT /F1 10 Tf 54 450.00 Td (  tasks, quotes, messages, and settings.) Tj ET
+BT /F1 10 Tf 54 438.00 Td (- Server storage: src modules use src/store.js to read/write JSON files in data/) Tj ET
+BT /F1 10 Tf 54 426.00 Td (  \(db.json, settings.json\).) Tj ET
+BT /F2 12 Tf 54 410.00 Td (How to run) Tj ET
+BT /F1 10 Tf 54 394.00 Td (- Open index.html in a browser \(offline, uses localStorage\).) Tj ET
+BT /F1 10 Tf 54 382.00 Td (- Optional: run npm start and open http://localhost:3000 to use the Node server.) Tj ET
+endstream
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000251 00000 n 
+0000000321 00000 n 
+0000000396 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+2697
+%%EOF

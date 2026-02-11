@@ -1,0 +1,5 @@
+job_id,date,crew,crew_size,location,job_type,estimated_hours,status
+JOB-001,2026-02-03,Crew A,3,"123 Main St, Baltimore, MD",Storefront Installation,6,scheduled
+JOB-002,2026-02-03,Crew B,2,"456 Oak Ave, Baltimore, MD",Residential Window Replacement,4,scheduled
+JOB-003,2026-02-04,Crew A,3,"789 Elm St, Baltimore, MD",Glass Repair,3,scheduled
+

@@ -1,0 +1,31 @@
+{
+  "email": {
+    "provider": "mock",
+    "api_credentials_path": "./credentials/gmail_credentials.json",
+    "search_keywords": ["quote", "estimate", "invoice", "schedule", "material", "order"],
+    "days_back_default": 30
+  },
+  "schedule": {
+    "calendar_source": "mock",
+    "calendar_id": "primary",
+    "csv_path": "./data/examples/schedule.example.csv",
+    "days_ahead_default": 14,
+    "hours_per_day": 8,
+    "workdays": [0, 1, 2, 3, 4]
+  },
+  "accounting": {
+    "source": "mock",
+    "export_path": "./data/examples/accounting_export.example.csv",
+    "default_terms_days": 30,
+    "currency": "USD"
+  },
+  "inventory": {
+    "source": "mock",
+    "file_path": "./data/examples/inventory.example.csv"
+  },
+  "output": {
+    "structured_data_path": "./output/vision_glass_data.json",
+    "dashboard_data_path": "./output/dashboard_data.json"
+  }
+}
+

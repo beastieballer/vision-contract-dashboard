@@ -1,0 +1,5 @@
+item_id,description,unit,current_stock,reorder_point
+GLASS-001,"1/4 in Clear Tempered",sheet,12,10
+GLASS-002,"1/2 in Tempered",sheet,3,8
+SEAL-001,Silicone Sealant,tube,45,20
+

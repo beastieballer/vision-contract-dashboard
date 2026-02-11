@@ -1,0 +1,5 @@
+invoice_id,job_id,date_issued,due_date,terms_days,amount,status,date_paid,customer
+INV-4521,JOB-001,2026-01-25,2026-02-24,30,8500.00,paid,2026-01-28,ABC Corp
+INV-4522,JOB-002,2026-01-26,2026-02-10,30,3200.00,overdue,,John Smith
+INV-4523,JOB-003,2026-01-29,,30,12000.00,pending,,XYZ Building
+

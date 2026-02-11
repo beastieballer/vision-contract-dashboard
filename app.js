@@ -1,794 +1,1163 @@
-const crewSchedule = {
-  2:{jobs:[{name:'Job #2840 — Shower Enclosure',crew:'Team Bravo',loc:'Pikesville, MD'}]},
-  3:{jobs:[{name:'Job #2841 — Storefront Repair',crew:'Team Alpha',loc:'Federal Hill, Baltimore'},{name:'Job #2842 — Mirror Install',crew:'Team Delta',loc:'Towson, MD'}]},
-  4:{jobs:[{name:'Job #2843 — Window Measure',crew:'Team Echo',loc:'Columbia, MD'}]},
-  5:{jobs:[{name:'Job #2844 — Curtain Wall',crew:'Team Alpha',loc:'Inner Harbor, Baltimore'},{name:'Job #2845 — Glass Partition',crew:'Team Foxtrot',loc:'Owings Mills, MD'}]},
-  6:{jobs:[{name:'Job #2846 — Railing Install',crew:'Team Golf',loc:'Canton, Baltimore'}]},
-  7:{jobs:[{name:'Job #2847 — Storefront Install',crew:'Team Alpha',loc:'Fells Point, Baltimore'},{name:'Job #2851 — Window Replacement',crew:'Team Bravo',loc:'Towson, MD'}]},
-  8:{jobs:[{name:'Job #2847 — Storefront (Day 2)',crew:'Team Alpha',loc:'Fells Point, Baltimore'}]},
-  10:{jobs:[{name:'Job #2848 — Office Glass Wall',crew:'Team Charlie',loc:'Hunt Valley, MD'},{name:'Job #2849 — Curtain Wall Repair',crew:'Team Delta',loc:'Inner Harbor, Baltimore'}]},
-  11:{jobs:[{name:'Job #2849 — Curtain Wall (Day 2)',crew:'Team Delta',loc:'Inner Harbor, Baltimore'}]},
-  12:{jobs:[{name:'Job #2850 — Skylight Repair',crew:'Team Echo',loc:'Ellicott City, MD'}]},
-  13:{jobs:[{name:'Job #2851 — Window Replace (Day 2)',crew:'Team Bravo',loc:'Towson, MD'},{name:'Job #2852 — Emergency Board-Up',crew:'Team Golf',loc:'Dundalk, MD'}]},
-  14:{jobs:[{name:'Job #2853 — Glass Railing',crew:'Team Alpha',loc:'Canton, Baltimore'}]},
-  17:{jobs:[{name:'Job #2854 — Storefront Install',crew:'Team Bravo',loc:'White Marsh, MD'},{name:'Job #2855 — Partition Wall',crew:'Team Charlie',loc:'Timonium, MD'}]},
-  18:{jobs:[{name:'Job #2854 — Storefront (Day 2)',crew:'Team Bravo',loc:'White Marsh, MD'}]},
-  19:{jobs:[{name:'Job #2856 — Window Install',crew:'Team Delta',loc:'Catonsville, MD'},{name:'Job #2857 — Mirror Wall',crew:'Team Foxtrot',loc:'Lutherville, MD'}]},
-  20:{jobs:[{name:'Job #2858 — Curtain Wall',crew:'Team Alpha',loc:'Harbor East, Baltimore'}]},
-  21:{jobs:[{name:'Job #2858 — Curtain Wall (Day 2)',crew:'Team Alpha',loc:'Harbor East, Baltimore'},{name:'Job #2859 — Shower Glass',crew:'Team Echo',loc:'Bel Air, MD'}]},
-  24:{jobs:[{name:'Job #2860 — Commercial Glazing',crew:'Team Alpha',loc:'BWI Area, MD'},{name:'Job #2861 — Storefront',crew:'Team Charlie',loc:'Annapolis, MD'}]},
-  25:{jobs:[{name:'Job #2860 — Glazing (Day 2)',crew:'Team Alpha',loc:'BWI Area, MD'}]},
-  26:{jobs:[{name:'Job #2862 — Window Retrofit',crew:'Team Delta',loc:'Severna Park, MD'}]},
-  27:{jobs:[{name:'Job #2863 — Glass Canopy',crew:'Team Bravo',loc:'Inner Harbor, Baltimore'},{name:'Job #2864 — Partition',crew:'Team Golf',loc:'Reisterstown, MD'}]},
-  28:{jobs:[{name:'Job #2863 — Canopy (Day 2)',crew:'Team Bravo',loc:'Inner Harbor, Baltimore'}]}
-};
+const STORAGE_KEY = "wf_db_v1";
 
-const scripts = {
-  kpiRevenue: {
-    title: 'Revenue (MTD) — Breakdown',
-    detail: `Collected: $127,450\nTarget: $150,000 (85%)\nProjected EOM: $148,900\nOutstanding bids: $38,200\nTop job: Harbor East Tower — $22,400`
+const DEFAULT_SETTINGS = {
+  currency: "USD",
+  minimum_job: { residential: 499, commercial: 1250 },
+  labor_per_sqft: { solar: 4.5, decorative: 5.5, safety: 7.5, anti_graffiti: 6.5 },
+  material_per_sqft_default: 1.1,
+  material_per_sqft_by_type: {
+    solar_interior: 1.0,
+    solar_exterior: 1.2,
+    decorative_basic: 0.85,
+    decorative_premium: 5.35,
+    safety_security_8mil: 1.45
   },
-  kpiActiveJobs: {
-    title: 'Active Jobs — Pipeline',
-    detail: `Total active: 14\nStarting this week: 3\nIn fabrication: 4\nOn-site install: 6\nCloseout: 1`
-  },
-  kpiChangeOrders: {
-    title: 'Change Orders — Status',
-    detail: `Open: 7\nPending approval: $12,300\nAverage approval time: 6.4 days\nHigh risk: 2\nExpected this week: 3`
-  },
-  kpiCrewUtilization: {
-    title: 'Crew Utilization — Detail',
-    detail: `Utilization: 82%\nActive crews: 5 of 7\nIdle hours today: 10.2\nTop idle crew: Team Charlie\nOvertime risk: Team Alpha (2.5 hrs)`
-  },
-  coFellsPoint: {
-    title: 'Fells Point Storefront — Change Order',
-    call: `Hi [Client Name], this is [Your Name] from VISION CONTRACT calling about the Fells Point storefront project.
-
-Our team was on-site this morning for final measurements, and we discovered a variance from the original quote. The opening width measures 84.5 inches, which is 2.5 inches wider than the 82 inches we quoted.
-
-To ensure a proper fit and maintain the structural integrity, we'll need to fabricate custom glass panels to the correct dimensions. This will result in a change order of $850 for materials and additional fabrication time.
-
-I wanted to reach out immediately so we can keep the project on schedule. Can we get your approval on this change order today? I can email you the formal documentation right now.
-
-[Pause for response]
-
-Great, I'll send that over within the next 10 minutes. Do you have any questions about the variance or the pricing?`,
-    email: {
-      subject: 'Change Order Required — Fells Point Storefront (Job #2847)',
-      body: `Dear [Client Name],
-
-Following our site visit this morning, we've identified a field measurement variance that requires a change order to proceed.
-
-ISSUE DETAILS:
-• Location: Fells Point Storefront Opening
-• Quoted dimension: 82" width
-• Actual field measurement: 84.5" width
-• Variance: +2.5 inches
-
-CHANGE ORDER AMOUNT: $850
-• Additional materials: $520
-• Custom fabrication: $330
-
-IMPACT:
-With approval today, we can maintain the current schedule with no delays.
-
-Please reply to approve this change order, or call me directly at [phone].
-
-Best regards,
-[Your Name]
-VISION CONTRACT`
-    }
-  },
-  coCantonLofts: {
-    title: 'Canton Lofts — Glass Spec Upgrade',
-    call: `Hi [Client Name], this is [Your Name] from VISION CONTRACT regarding the Canton Lofts project.
-
-We received a spec change request from your architect yesterday requesting an upgrade from standard clear glass to low-E insulated units for 12 windows.
-
-This is actually a great upgrade for energy efficiency, but it does impact the pricing. The change order would be $3,200 for the upgraded glass units.
-
-I wanted to confirm this change with you directly before we proceed. Did you authorize this upgrade with the architect?
-
-[Pause for response]
-
-Perfect. I'll prepare the formal change order documentation and email it to you within the hour.`,
-    email: {
-      subject: 'Spec Change Request — Canton Lofts Low-E Upgrade',
-      body: `Dear [Client Name],
-
-We received a specification change request from [Architect Name] for the Canton Lofts project.
-
-REQUESTED CHANGE:
-• Original spec: Standard clear glass
-• New spec: Low-E insulated glass units
-• Quantity affected: 12 windows
-
-CHANGE ORDER AMOUNT: $3,200
-• Material upgrade: $2,400
-• Additional fabrication: $800
-
-TIMELINE:
-• Lead time: 10 days from approval
-• No impact to completion date if approved by Feb 6
-
-Best regards,
-[Your Name]
-VISION CONTRACT`
-    }
-  },
-  invoiceJohnsHopkins: {
-    title: 'Johns Hopkins — Overdue Invoice Collection',
-    call: `Hi, this is [Your Name] from VISION CONTRACT. I'm calling regarding invoice #2847 for $18,400 that's now 45 days past due.
-
-We completed the work on December 22nd, and the invoice was due January 5th. I wanted to reach out personally to see if there's an issue with the invoice or if we can arrange payment.
-
-[Pause for response]
-
-I understand. What I need from you today is a commitment on when we can expect payment. Can we schedule payment for this week?
-
-[If they push back]
-
-I appreciate that, but we've been very patient. This is now significantly past due. If we can't arrange payment this week, I'll need to escalate this to our collections department.
-
-What works better for you — payment by Friday, or should I start the formal collections process?`,
-    email: {
-      subject: 'FINAL NOTICE — Invoice #2847 Past Due ($18,400)',
-      body: `Dear Accounts Payable,
-
-This is a final notice regarding Invoice #2847 in the amount of $18,400.
-
-INVOICE DETAILS:
-• Invoice #: 2847
-• Amount: $18,400
-• Original due date: January 5, 2026
-• Days past due: 45 days
-
-NEXT STEPS IF PAYMENT NOT RECEIVED BY FEBRUARY 10, 2026:
-1. Account will be sent to collections agency
-2. Mechanics lien will be filed on the property
-3. Legal action will be initiated
-
-Please remit payment immediately.
-
-[Your Name]
-VISION CONTRACT`
-    }
-  },
-  laborOverrun: {
-    title: 'Federal Hill — Labor Overrun Investigation',
-    call: `Hi [Foreman Name], this is [Your Name]. I need to talk to you about the Federal Hill job.
-
-I'm looking at the numbers, and we're showing a significant labor overrun. We budgeted 20 hours at $1,515, but the actual came in at 57.5 hours for $4,365. That's 188% over estimate — a $2,850 loss.
-
-Can you walk me through what happened on that job?
-
-[Listen to response]
-
-Here's what I need from you:
-1. A detailed breakdown of where those extra hours went
-2. What could have been done differently
-3. A plan to prevent this on future jobs
-
-Can you get me that information by end of day tomorrow?`,
-    email: null
-  },
-  crewCharlie: {
-    title: 'Team Charlie — Dead Time Escalation',
-    call: `Hi [Foreman Name], this is [Your Name]. I'm looking at today's crew utilization, and Team Charlie is showing 4.8 hours of idle time. That's 60% of the day.
-
-What's going on?
-
-[Listen to response]
-
-I understand, but 4.8 hours is unacceptable. That's costing us $850 in lost productivity today alone.
-
-Here's what needs to happen:
-1. Get Team Charlie reassigned to Job #2851 in Towson immediately
-2. Call me back in 30 minutes to confirm they're on-site
-3. We need a plan to prevent this from happening again
-
-Can you make that happen right now?`,
-    email: null
-  },
-  materialDelay: {
-    title: 'Cardinal Glass IGU Delay — Client Notification',
-    call: `Hi [Client Name], this is [Your Name] from VISION CONTRACT. I'm calling about the Canton Lofts project.
-
-Our supplier, Cardinal Glass, is experiencing a production delay. The insulated glass units are now delayed by 5 days — from February 6th to February 11th.
-
-I wanted to let you know immediately so we can discuss options.
-
-[Pause for response]
-
-Here's what I recommend: We can still proceed with the frame installation as scheduled, and then come back to install the glass units when they arrive. This way we minimize the impact to your overall timeline.
-
-Which option works better for you?`,
-    email: {
-      subject: 'Material Delay Notice — Canton Lofts Project',
-      body: `Dear [Client Name],
-
-I'm writing to inform you of a material delay affecting the Canton Lofts project.
-
-DELAY DETAILS:
-• Material: Cardinal Glass Insulated Units
-• Original ETA: February 6, 2026
-• New ETA: February 11, 2026
-• Delay: 5 days
-
-PROPOSED SOLUTION:
-Option 1: Proceed with frame installation as scheduled, return for glass on Feb 11
-Option 2: Reschedule entire installation to Feb 11
-
-Please let me know which option you prefer.
-
-Best regards,
-[Your Name]
-VISION CONTRACT`
-    }
+  waste_factor: { simple: 0.1, mixed: 0.15, complex: 0.2 },
+  removal: { per_sqft: 2.5, heavy_adhesive_adder_per_sqft: 1.5, minimum: 150 },
+  adders: { coi_admin: 75, permit_handling: 150 },
+  gross_margin_targets: { good: 0.45, better: 0.5, best: 0.55 },
+  quote_valid_days: 14,
+  payment_terms: {
+    residential: { deposit_pct: 0.5, balance: "due_on_completion" },
+    commercial: { deposit_pct: 0.3, balance: "net_15_or_due_on_completion_under_2500" }
   }
 };
 
-const crewDetails = {
-  alpha: {
-    title: 'Team Alpha',
-    status: 'Active',
-    job: 'Job #2858 — Curtain Wall',
-    location: 'Harbor East, Baltimore',
-    members: ['Chris M. (Lead)', 'Dylan R.', 'Nate P.', 'Ava L.'],
-    notes: 'On-site install. Glass delivery confirmed for 9:30 AM.'
-  },
-  bravo: {
-    title: 'Team Bravo',
-    status: 'Active',
-    job: 'Job #2851 — Window Replacement',
-    location: 'Towson, MD',
-    members: ['Sam K. (Lead)', 'Priya S.', 'Marco T.'],
-    notes: 'Second floor units complete. Waiting on client access for suite 210.'
-  },
-  charlie: {
-    title: 'Team Charlie',
-    status: 'Idle — 4.8 hrs',
-    job: 'Reassignment Pending',
-    location: 'Harbor East staging',
-    members: ['Luis A. (Lead)', 'Jenna Q.', 'Ravi D.'],
-    notes: 'Idle due to delayed site access. Reassign to Towson if no update by 10:30 AM.'
-  },
-  delta: {
-    title: 'Team Delta',
-    status: 'Active',
-    job: 'Job #2849 — Curtain Wall Repair',
-    location: 'Inner Harbor, Baltimore',
-    members: ['Omar B. (Lead)', 'Kate W.', 'Paul N.'],
-    notes: 'Day 2. Sealant cure time extended due to overnight cold.'
-  },
-  echo: {
-    title: 'Team Echo',
-    status: 'Active',
-    job: 'Job #2859 — Shower Glass',
-    location: 'Bel Air, MD',
-    members: ['Noah J. (Lead)', 'Ella V.'],
-    notes: 'Final measurements complete. Install window 2:00–4:00 PM.'
-  },
-  foxtrot: {
-    title: 'Team Foxtrot',
-    status: 'Active',
-    job: 'Job #2857 — Mirror Wall',
-    location: 'Lutherville, MD',
-    members: ['Maya G. (Lead)', 'Ethan C.'],
-    notes: 'Backing prep in progress. Adhesive ETA 11:00 AM.'
-  },
-  golf: {
-    title: 'Team Golf',
-    status: 'Active',
-    job: 'Job #2852 — Emergency Board-Up',
-    location: 'Dundalk, MD',
-    members: ['Alex H. (Lead)', 'Tara F.'],
-    notes: 'Urgent call. Expected completion by noon.'
-  }
+const SEED_DB = {
+  version: 1,
+  settings: DEFAULT_SETTINGS,
+  leads: [
+    {
+      id: "lead_seed_1",
+      createdAt: "2026-02-10T12:00:00.000Z",
+      updatedAt: "2026-02-10T12:00:00.000Z",
+      status: "NEW",
+      source: "web",
+      contact: { name: "Avery Johnson", phone: "+14105550123", email: "avery@example.com" },
+      location: { address: "123 Harbor Ave", city: "Baltimore", state: "MD" },
+      jobType: "residential",
+      sqftEstimate: 180,
+      filmCategory: "solar_interior",
+      goals: ["heat", "glare"],
+      glass: { dualPane: null, lowE: null, notes: "Not sure if low-e. Wants daytime privacy too." },
+      removalNeeded: false,
+      access: "ground + step ladder",
+      notes: "Wants a quick ballpark today; prefers text.",
+      tags: ["hot_lead"],
+      history: [{ at: "2026-02-10T12:00:00.000Z", type: "LEAD_CREATED", by: "system", detail: { source: "web" } }]
+    },
+    {
+      id: "lead_seed_2",
+      createdAt: "2026-02-10T12:05:00.000Z",
+      updatedAt: "2026-02-10T12:05:00.000Z",
+      status: "QUALIFYING",
+      source: "phone",
+      contact: { name: "Morgan Facilities", phone: "+14435550199", email: "fm@morganfacilities.com" },
+      location: { address: "500 Market St", city: "Columbia", state: "MD" },
+      jobType: "commercial",
+      sqftEstimate: null,
+      filmCategory: "unsure",
+      goals: ["heat", "uv"],
+      glass: { dualPane: null, lowE: null, notes: "Office building, 2nd floor. Needs COI." },
+      removalNeeded: null,
+      access: "interior access, ladder likely",
+      notes: "Needs options and estimated payback; schedule site walk.",
+      tags: ["commercial"],
+      history: [{ at: "2026-02-10T12:05:00.000Z", type: "LEAD_CREATED", by: "system", detail: { source: "phone" } }]
+    }
+  ],
+  tasks: [],
+  quotes: [],
+  messages: []
 };
 
-const WEATHER = {
-  name: 'Baltimore, MD',
-  latitude: 39.28944,
-  longitude: -76.61528
+const els = {
+  timestamp: document.getElementById("timestamp"),
+  leadCount: document.getElementById("leadCount"),
+  leadsList: document.getElementById("leadsList"),
+  leadTitle: document.getElementById("leadTitle"),
+  leadMeta: document.getElementById("leadMeta"),
+  leadDetailBody: document.getElementById("leadDetailBody"),
+  tasksList: document.getElementById("tasksList"),
+  quotesList: document.getElementById("quotesList"),
+  messagesList: document.getElementById("messagesList"),
+  newLeadBtn: document.getElementById("newLeadBtn"),
+  seedLeadsBtn: document.getElementById("seedLeadsBtn"),
+  exportBtn: document.getElementById("exportBtn"),
+  importBtn: document.getElementById("importBtn"),
+  refreshBtn: document.getElementById("refreshBtn"),
+  createFollowupsBtn: document.getElementById("createFollowupsBtn"),
+  ballparkBtn: document.getElementById("ballparkBtn"),
+  proposalBtn: document.getElementById("proposalBtn"),
+  draftReplyBtn: document.getElementById("draftReplyBtn"),
+  modalOverlay: document.getElementById("modalOverlay"),
+  modalTitle: document.getElementById("modalTitle"),
+  modalBody: document.getElementById("modalBody"),
+  closeModalBtn: document.getElementById("closeModalBtn"),
+  closeBtn: document.getElementById("closeBtn"),
+  copyBtn: document.getElementById("copyBtn")
 };
 
-const weatherCodeLabels = new Map([
-  [0, 'Clear sky'],
-  [1, 'Mainly clear'],
-  [2, 'Partly cloudy'],
-  [3, 'Overcast'],
-  [45, 'Fog'],
-  [48, 'Depositing rime fog'],
-  [51, 'Light drizzle'],
-  [53, 'Moderate drizzle'],
-  [55, 'Dense drizzle'],
-  [56, 'Light freezing drizzle'],
-  [57, 'Dense freezing drizzle'],
-  [61, 'Slight rain'],
-  [63, 'Moderate rain'],
-  [65, 'Heavy rain'],
-  [66, 'Light freezing rain'],
-  [67, 'Heavy freezing rain'],
-  [71, 'Slight snow fall'],
-  [73, 'Moderate snow fall'],
-  [75, 'Heavy snow fall'],
-  [77, 'Snow grains'],
-  [80, 'Slight rain showers'],
-  [81, 'Moderate rain showers'],
-  [82, 'Violent rain showers'],
-  [85, 'Slight snow showers'],
-  [86, 'Heavy snow showers'],
-  [95, 'Thunderstorm'],
-  [96, 'Thunderstorm with slight hail'],
-  [99, 'Thunderstorm with heavy hail']
-]);
+let state = { db: null, selectedLeadId: null };
 
-const focusableSelector = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
-const modal = document.getElementById('scriptModal');
-const modalBody = document.getElementById('modalBody');
-const modalTitle = document.getElementById('modalTitle');
-const closeModalBtn = document.getElementById('closeModalBtn');
-const weatherModal = document.getElementById('weatherModal');
-const weatherModalBody = document.getElementById('weatherModalBody');
-const weatherModalTitle = document.getElementById('weatherModalTitle');
-const closeWeatherModalBtn = document.getElementById('closeWeatherModalBtn');
-const crewModal = document.getElementById('crewModal');
-const crewModalBody = document.getElementById('crewModalBody');
-const crewModalTitle = document.getElementById('crewModalTitle');
-const closeCrewModalBtn = document.getElementById('closeCrewModalBtn');
-let lastFocusedElement = null;
-let weatherState = null;
-
-function escapeHtml(value) {
-  return value
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#39;');
+function escapeHtml(s) {
+  return String(s ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
 }
 
-function getTextByType(item, type) {
-  if (!item) return '';
-  if (type === 'call') return item.call || '';
-  if (type === 'subject') return item.email?.subject || '';
-  if (type === 'body') return item.email?.body || '';
-  return '';
+function fmtDate(iso) {
+  if (!iso) return "—";
+  const d = new Date(iso);
+  return d.toLocaleString();
 }
 
-async function copyText(id, type, button) {
-  const text = getTextByType(scripts[id], type);
-  if (!text || !button) return;
+function nowIso() {
+  return new Date().toISOString();
+}
 
-  const original = button.textContent;
+function newId(prefix) {
+  const rand = Math.random().toString(16).slice(2, 10);
+  return `${prefix}_${Date.now().toString(16)}_${rand}`;
+}
+
+function loadDb() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) return structuredClone(SEED_DB);
   try {
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      await navigator.clipboard.writeText(text);
-    } else {
-      const fallback = document.createElement('textarea');
-      fallback.value = text;
-      fallback.setAttribute('readonly', '');
-      fallback.style.position = 'absolute';
-      fallback.style.left = '-9999px';
-      document.body.appendChild(fallback);
-      fallback.select();
-      document.execCommand('copy');
-      fallback.remove();
-    }
-
-    button.textContent = '✅ Copied!';
+    const parsed = JSON.parse(raw);
+    parsed.version ??= 1;
+    parsed.settings ??= structuredClone(DEFAULT_SETTINGS);
+    parsed.leads ??= [];
+    parsed.tasks ??= [];
+    parsed.quotes ??= [];
+    parsed.messages ??= [];
+    return parsed;
   } catch {
-    button.textContent = '❌ Copy failed';
+    return structuredClone(SEED_DB);
   }
-
-  setTimeout(() => {
-    button.textContent = original;
-  }, 1500);
 }
 
-function openModal(id) {
-  const item = scripts[id];
-  if (!item) return;
+function saveDb(db) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+}
 
-  lastFocusedElement = document.activeElement;
-  modalTitle.textContent = item.title;
+function normalizePhone(phone) {
+  if (!phone) return null;
+  const digits = String(phone).replace(/[^\d]/g, "");
+  if (!digits) return null;
+  if (digits.length === 11 && digits.startsWith("1")) return `+${digits}`;
+  if (digits.length === 10) return `+1${digits}`;
+  return `+${digits}`;
+}
 
-  let html = '';
-  if (item.detail) {
-    html += `<div class="script-section"><h3>Details</h3><div class="script-content">${escapeHtml(item.detail)}</div></div>`;
-  }
-  if (item.call) {
-    html += `<div class="script-section"><h3>📞 Phone Call Script</h3><div class="script-content">${escapeHtml(item.call)}</div><button class="copy-btn" type="button" data-copy-id="${id}" data-copy-type="call">📋 Copy Call Script</button></div>`;
-  }
-  if (item.email) {
-    html += `<div class="script-section"><h3>✉️ Email Template</h3><div style="margin-bottom:12px"><strong style="color:var(--text-secondary)">Subject:</strong><div class="script-content">${escapeHtml(item.email.subject)}</div><button class="copy-btn" type="button" data-copy-id="${id}" data-copy-type="subject">📋 Copy Subject</button></div><div><strong style="color:var(--text-secondary)">Body:</strong><div class="script-content">${escapeHtml(item.email.body)}</div><button class="copy-btn" type="button" data-copy-id="${id}" data-copy-type="body">📋 Copy Email Body</button></div></div>`;
+function normalizeEmail(email) {
+  if (!email) return null;
+  const value = String(email).trim().toLowerCase();
+  if (!value.includes("@")) return null;
+  return value;
+}
+
+function hasAny(v) {
+  return v !== null && v !== undefined && String(v).trim() !== "";
+}
+
+function scoreLead(lead) {
+  const reasons = [];
+  let score = 0;
+
+  if (hasAny(lead.contact?.phone) || hasAny(lead.contact?.email)) {
+    score += 15;
+    reasons.push("Contactable (phone/email).");
+  } else {
+    reasons.push("Missing contact details.");
   }
 
-  modalBody.innerHTML = html;
-  modal.classList.add('open');
-  modal.setAttribute('aria-hidden', 'false');
-  document.body.style.overflow = 'hidden';
-  closeModalBtn.focus();
+  if (hasAny(lead.location?.city) || hasAny(lead.location?.address)) {
+    score += 10;
+    reasons.push("Has location.");
+  } else {
+    reasons.push("Missing location (harder to schedule).");
+  }
+
+  const sqft = Number(lead.sqftEstimate);
+  if (Number.isFinite(sqft) && sqft > 0) {
+    score += Math.min(25, 5 + Math.log10(Math.max(10, sqft)) * 10);
+    reasons.push("Has sqft estimate (can quote faster).");
+  } else {
+    reasons.push("No sqft estimate yet.");
+  }
+
+  const goalsCount = Array.isArray(lead.goals) ? lead.goals.length : 0;
+  if (goalsCount >= 2) {
+    score += 10;
+    reasons.push("Clear goals.");
+  } else if (goalsCount === 1) {
+    score += 5;
+    reasons.push("Some goals provided.");
+  } else {
+    reasons.push("Goals unknown.");
+  }
+
+  const glassKnown = lead.glass?.dualPane !== null || lead.glass?.lowE !== null;
+  if (glassKnown) {
+    score += 5;
+    reasons.push("Some glass info provided.");
+  } else {
+    reasons.push("Glass type unknown (risk).");
+  }
+
+  if (lead.removalNeeded === true) {
+    score += 5;
+    reasons.push("Removal needed (higher ticket).");
+  }
+
+  if (lead.jobType === "commercial") {
+    score += 5;
+    reasons.push("Commercial lead (typically larger value).");
+  }
+
+  score = Math.max(0, Math.min(100, Math.round(score)));
+  const missingSqft = !(Number.isFinite(sqft) && sqft > 0);
+  const nextBestAction = missingSqft
+    ? "Schedule a quick measure (virtual or onsite) to lock scope."
+    : "Send a ballpark quote + 2–3 film options, then book measure/installation.";
+
+  return { score, reasons, nextBestAction };
+}
+
+function reScoreLead(lead) {
+  const scored = scoreLead(lead);
+  lead.score = scored.score;
+  lead.scoreReasons = scored.reasons;
+  lead.nextBestAction = scored.nextBestAction;
+  return lead;
+}
+
+function listLeads() {
+  return [...state.db.leads].sort((a, b) => (a.updatedAt < b.updatedAt ? 1 : -1)).map((l) => reScoreLead(l));
+}
+
+function getLeadById(id) {
+  return state.db.leads.find((l) => l.id === id) ?? null;
+}
+
+function upsertLead(lead) {
+  const idx = state.db.leads.findIndex((l) => l.id === lead.id);
+  if (idx === -1) state.db.leads.push(lead);
+  else state.db.leads[idx] = lead;
+  saveDb(state.db);
+}
+
+function roundUp(value, increment) {
+  return Math.ceil(value / increment) * increment;
+}
+
+function money(n) {
+  return Math.round(n * 100) / 100;
+}
+
+function formatUsd(n) {
+  const value = Number(n);
+  if (!Number.isFinite(value)) return "";
+  return value.toLocaleString("en-US", { style: "currency", currency: "USD" });
+}
+
+function categoryToLaborBucket(filmCategory) {
+  if (!filmCategory) return "solar";
+  if (filmCategory.startsWith("decorative")) return "decorative";
+  if (filmCategory.startsWith("safety")) return "safety";
+  if (filmCategory.includes("graffiti")) return "anti_graffiti";
+  return "solar";
+}
+
+function computeQuote({ lead, measuredSqft, complexity = "simple", grossMarginTier = "better", includeRemoval = null }) {
+  const settings = state.db.settings ?? DEFAULT_SETTINGS;
+  const measured = Number(measuredSqft ?? lead?.sqftEstimate ?? NaN);
+  if (!Number.isFinite(measured) || measured <= 0) return { error: "missing_sqft" };
+
+  const waste = settings.waste_factor?.[complexity] ?? settings.waste_factor?.simple ?? 0.1;
+  const billable = roundUp(measured * (1 + waste), 5);
+
+  const filmType = lead?.filmCategory ?? "unsure";
+  const materialPerSqft = settings.material_per_sqft_by_type?.[filmType] ?? settings.material_per_sqft_default ?? 1.1;
+
+  const laborBucket = categoryToLaborBucket(filmType);
+  const laborPerSqft = settings.labor_per_sqft?.[laborBucket] ?? 5.0;
+
+  const materialCost = billable * materialPerSqft;
+  const laborCost = measured * laborPerSqft;
+
+  const adders = [];
+  if (lead?.jobType === "commercial" && settings.adders?.coi_admin) {
+    adders.push({ key: "coi_admin", label: "COI/Admin", amount: settings.adders.coi_admin });
+  }
+
+  const removalRequested = includeRemoval === null ? Boolean(lead?.removalNeeded) : Boolean(includeRemoval);
+  if (removalRequested) {
+    const removal = settings.removal ?? {};
+    const removalCalc = measured * (removal.per_sqft ?? 2.5);
+    const removalAmount = Math.max(removal.minimum ?? 150, removalCalc);
+    adders.push({ key: "removal", label: "Old film removal (est.)", amount: removalAmount });
+  }
+
+  const addersTotal = adders.reduce((sum, a) => sum + a.amount, 0);
+  const subtotal = materialCost + laborCost + addersTotal;
+
+  const targetGM = settings.gross_margin_targets?.[grossMarginTier] ?? 0.5;
+  const sellFromGM = subtotal / (1 - targetGM);
+
+  const minJob =
+    (lead?.jobType === "commercial" ? settings.minimum_job?.commercial : settings.minimum_job?.residential) ?? 0;
+  const total = Math.max(minJob, sellFromGM);
+
+  return {
+    measuredSqft: money(measured),
+    billableSqft: money(billable),
+    wasteFactor: waste,
+    filmType,
+    laborBucket,
+    rates: { materialPerSqft: money(materialPerSqft), laborPerSqft: money(laborPerSqft), targetGM },
+    costs: {
+      materialCost: money(materialCost),
+      laborCost: money(laborCost),
+      adders,
+      subtotal: money(subtotal)
+    },
+    minimumJobApplied: total > sellFromGM ? money(minJob) : null,
+    total: money(total)
+  };
+}
+
+function computeBallparkRange({ lead, measuredSqft, complexity = "simple" }) {
+  const low = computeQuote({ lead, measuredSqft, complexity, grossMarginTier: "good", includeRemoval: false });
+  if (low.error) return low;
+
+  const high = computeQuote({
+    lead,
+    measuredSqft,
+    complexity: complexity === "simple" ? "mixed" : "complex",
+    grossMarginTier: "best",
+    includeRemoval: lead?.removalNeeded ?? false
+  });
+  if (high.error) return high;
+
+  const lowTotal = Math.min(low.total, high.total);
+  const highTotal = Math.max(low.total, high.total);
+
+  return {
+    measuredSqft: low.measuredSqft,
+    filmType: low.filmType,
+    low: money(lowTotal),
+    high: money(highTotal),
+    assumptions: { complexity, removalIncludedInHigh: Boolean(lead?.removalNeeded), glassVerificationRequired: true }
+  };
+}
+
+function buildBallparkText({ lead, range }) {
+  const city = lead.location?.city ? ` in ${lead.location.city}` : "";
+  const sqft = range.measuredSqft ? `${range.measuredSqft} sqft` : "your windows";
+  const goal = Array.isArray(lead.goals) && lead.goals.length ? ` (${lead.goals.join(", ")})` : "";
+  return (
+    `Ballpark for ${sqft}${city} is ${formatUsd(range.low)}–${formatUsd(range.high)} installed.` +
+    ` Assumes standard access, interior install where appropriate, and glass-type verification.` +
+    ` Next step: send a quick video walkthrough + confirm if the glass is dual-pane/low‑e.${goal}`
+  );
+}
+
+function buildProposalHtml({ lead, quote }) {
+  const contactLine = [lead.contact?.name, lead.contact?.email, lead.contact?.phone].filter(Boolean).join(" · ");
+  const locationLine = [lead.location?.address, lead.location?.city, lead.location?.state].filter(Boolean).join(", ");
+  const adders = quote.costs?.adders ?? [];
+  const addersHtml = adders.length
+    ? `<ul>${adders.map((a) => `<li>${escapeHtml(a.label)}: <strong>${escapeHtml(formatUsd(a.amount))}</strong></li>`).join("")}</ul>`
+    : "<p>None</p>";
+
+  const goalHtml =
+    Array.isArray(lead.goals) && lead.goals.length ? `<p><strong>Goals:</strong> ${escapeHtml(lead.goals.join(", "))}</p>` : "";
+
+  return `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Window Film Proposal</title>
+  <style>
+    :root{
+      --text:#111827;
+      --muted:#4b5563;
+      --border:#e5e7eb;
+      --bg:#ffffff;
+      --card:#f9fafb;
+      --accent:#111827;
+    }
+    body{
+      font-family: "Inter", "Segoe UI", "Roboto", "Arial", sans-serif;
+      margin:40px;
+      color:var(--text);
+      background:var(--bg);
+      line-height:1.55;
+      font-size:15px;
+    }
+    h1{margin:0 0 6px 0; font-size:26px; letter-spacing:-0.2px;}
+    .muted{color:var(--muted); font-size:13px;}
+    .card{
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:18px;
+      margin:14px 0;
+      background:var(--card);
+    }
+    table{width:100%; border-collapse:collapse; font-size:14px;}
+    th{color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; font-size:11px;}
+    td,th{padding:10px 12px; border-bottom:1px solid #edf2f7;}
+    .total{font-size:20px; font-weight:700;}
+    .section-title{font-size:12px; text-transform:uppercase; letter-spacing:0.12em; color:var(--muted); margin-bottom:8px;}
+    ul{margin:8px 0 0 18px;}
+    li{margin:6px 0;}
+  </style>
+</head>
+<body>
+  <h1>Window Film Proposal</h1>
+  <div class="muted">${escapeHtml(nowIso().slice(0, 10))} · Lead ${escapeHtml(lead.id)}</div>
+
+  <div class="card">
+    <div class="muted">Customer</div>
+    <div>${escapeHtml(contactLine || "—")}</div>
+    <div class="muted" style="margin-top:8px;">Site</div>
+    <div>${escapeHtml(locationLine || "—")}</div>
+    ${goalHtml}
+  </div>
+
+  <div class="card">
+    <div class="muted">Scope</div>
+    <p>Supply and install ${escapeHtml(quote.filmType)} window film. Final film selection subject to glass-type verification (dual-pane/low‑e/tempered/laminated) and manufacturer compatibility.</p>
+  </div>
+
+  <div class="card">
+    <div class="muted">Measurements</div>
+    <table>
+      <tr><th align="left">Measured</th><th align="left">Billable</th><th align="left">Waste</th></tr>
+      <tr>
+        <td>${escapeHtml(quote.measuredSqft)} sqft</td>
+        <td>${escapeHtml(quote.billableSqft)} sqft</td>
+        <td>${escapeHtml(Math.round((quote.wasteFactor ?? 0) * 100))}%</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="muted">Pricing</div>
+    <table>
+      <tr><td>Material</td><td align="right"><strong>${escapeHtml(formatUsd(quote.costs.materialCost))}</strong></td></tr>
+      <tr><td>Labor</td><td align="right"><strong>${escapeHtml(formatUsd(quote.costs.laborCost))}</strong></td></tr>
+      <tr><td>Adders</td><td align="right"><strong>${escapeHtml(formatUsd((quote.costs.adders ?? []).reduce((s,a)=>s+a.amount,0)))}</strong></td></tr>
+      <tr><td class="total"><strong>Total</strong></td><td class="total" align="right"><strong>${escapeHtml(formatUsd(quote.total))}</strong></td></tr>
+    </table>
+    ${quote.minimumJobApplied ? `<p class="muted">Minimum job charge applied: ${escapeHtml(formatUsd(quote.minimumJobApplied))}</p>` : ""}
+  </div>
+
+  <div class="card">
+    <div class="muted">Adders detail</div>
+    ${addersHtml}
+  </div>
+
+  <div class="card">
+    <div class="muted">Assumptions & Exclusions</div>
+    <ul>
+      <li>Quote assumes standard access and prep. Surface condition may affect final price.</li>
+      <li>Thermal-stress risk on unknown/low‑e/aged IGUs must be reviewed before install.</li>
+      <li>Permit/engineering not included unless explicitly listed.</li>
+    </ul>
+  </div>
+</body>
+</html>`;
+}
+
+function listTasksForLead(leadId) {
+  return state.db.tasks.filter((t) => t.leadId === leadId).sort((a, b) => (a.dueAt > b.dueAt ? 1 : -1));
+}
+
+function listQuotesForLead(leadId) {
+  return state.db.quotes.filter((q) => q.leadId === leadId).sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+}
+
+function listMessagesForLead(leadId) {
+  return state.db.messages.filter((m) => m.leadId === leadId).sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+}
+
+function createDefaultFollowUpsForLead(leadId) {
+  const lead = getLeadById(leadId);
+  if (!lead) return null;
+
+  const existingTypes = new Set(state.db.tasks.filter((t) => t.leadId === leadId).map((t) => t.type));
+  const now = nowIso();
+  const tasks = [
+    { type: "FOLLOWUP_1H", dueHours: 1, title: "Send ballpark + film options", body: "Send ballpark + ask for glass type and a video walkthrough." },
+    { type: "FOLLOWUP_24H", dueHours: 24, title: "Follow up (24h)", body: "If no response, send 2 time slots for a measure." },
+    { type: "FOLLOWUP_72H", dueHours: 72, title: "Last touch (72h)", body: "Final check-in. Offer a quick call." }
+  ]
+    .filter((t) => !existingTypes.has(t.type))
+    .map((t) => ({
+      id: newId("task"),
+      leadId,
+      createdAt: now,
+      updatedAt: now,
+      status: "OPEN",
+      type: t.type,
+      dueAt: new Date(Date.now() + t.dueHours * 60 * 60 * 1000).toISOString(),
+      title: t.title,
+      body: t.body
+    }));
+
+  state.db.tasks.push(...tasks);
+  saveDb(state.db);
+  return { created: tasks.length, tasks };
+}
+
+function generateBallparkQuoteForLead(leadId) {
+  const lead = getLeadById(leadId);
+  if (!lead) return null;
+  const measuredSqft = lead.sqftEstimate ?? null;
+  const range = computeBallparkRange({ lead, measuredSqft, complexity: "simple" });
+  if (range.error) return { error: range.error };
+
+  const quote = {
+    id: newId("quote"),
+    leadId,
+    createdAt: nowIso(),
+    kind: "ballpark",
+    inputs: { measuredSqft, complexity: "simple" },
+    outputs: { range, text: buildBallparkText({ lead, range }) }
+  };
+  state.db.quotes.push(quote);
+
+  const nextLead = { ...lead, status: lead.status === "NEW" ? "QUOTED" : lead.status, updatedAt: nowIso() };
+  nextLead.history = [
+    ...(lead.history ?? []),
+    { at: nowIso(), type: "QUOTE_CREATED", by: "system", detail: { kind: "ballpark", quoteId: quote.id } }
+  ];
+  upsertLead(nextLead);
+
+  saveDb(state.db);
+  return quote;
+}
+
+function generateProposalForLead(leadId) {
+  const lead = getLeadById(leadId);
+  if (!lead) return null;
+  const computed = computeQuote({ lead, measuredSqft: lead.sqftEstimate ?? null, complexity: "simple", grossMarginTier: "better" });
+  if (computed.error) return { error: computed.error };
+
+  const proposalHtml = buildProposalHtml({ lead, quote: computed });
+  const quote = {
+    id: newId("quote"),
+    leadId,
+    createdAt: nowIso(),
+    kind: "proposal",
+    inputs: { measuredSqft: lead.sqftEstimate ?? null, complexity: "simple", grossMarginTier: "better" },
+    outputs: { computed, proposalHtml }
+  };
+  state.db.quotes.push(quote);
+
+  const nextLead = { ...lead, status: lead.status === "NEW" ? "QUOTED" : lead.status, updatedAt: nowIso() };
+  nextLead.history = [
+    ...(lead.history ?? []),
+    { at: nowIso(), type: "PROPOSAL_CREATED", by: "system", detail: { quoteId: quote.id } }
+  ];
+  upsertLead(nextLead);
+
+  saveDb(state.db);
+  return quote;
+}
+
+function pickChannel(lead) {
+  if (lead.contact?.phone) return "sms";
+  if (lead.contact?.email) return "email";
+  return "note";
+}
+
+function draftSmsForLead({ lead, quoteText }) {
+  const name = lead.contact?.name ? ` ${lead.contact.name.split(" ")[0]}` : "";
+  const nextStep = lead.sqftEstimate
+    ? "If that range works, I can recommend 2–3 film options and book a quick measure to confirm glass type."
+    : "If you can send a quick video walkthrough (or window sizes), I can firm up pricing and recommend the right film.";
+  return `Hi${name}—thanks for reaching out. ${quoteText}\n\n${nextStep}`;
+}
+
+function draftEmailForLead({ lead, quoteText }) {
+  const subject = `Window Film Estimate — ${lead.location?.city ?? "Your Site"}`;
+  const body =
+    `Hi${lead.contact?.name ? ` ${lead.contact.name}` : ""},\n\n` +
+    `${quoteText}\n\n` +
+    `To firm this up, please reply with:\n` +
+    `1) Confirmation if the glass is dual-pane / low‑e (if known)\n` +
+    `2) A quick video walkthrough (or window sizes)\n` +
+    `3) Any old film removal needed\n\n` +
+    `Thanks,\n`;
+  return { subject, body };
+}
+
+function draftReplyForLead(leadId) {
+  const lead = getLeadById(leadId);
+  if (!lead) return null;
+
+  let quoteText = null;
+  if (lead.sqftEstimate) {
+    const quote = generateBallparkQuoteForLead(leadId);
+    quoteText = quote?.outputs?.text ?? null;
+  }
+  quoteText ??= "I can get you a fast ballpark today—what’s the rough total sqft and is it residential or commercial?";
+
+  const channel = pickChannel(lead);
+  const record = {
+    id: newId("msg"),
+    leadId,
+    createdAt: nowIso(),
+    status: "DRAFT",
+    channel,
+    to: channel === "sms" ? lead.contact?.phone : lead.contact?.email,
+    subject: null,
+    body: ""
+  };
+
+  if (channel === "email") {
+    const email = draftEmailForLead({ lead, quoteText });
+    record.subject = email.subject;
+    record.body = email.body;
+  } else if (channel === "sms") {
+    record.body = draftSmsForLead({ lead, quoteText });
+  } else {
+    record.body = quoteText;
+  }
+
+  state.db.messages.push(record);
+  saveDb(state.db);
+  return record;
+}
+
+function setButtonsEnabled(enabled) {
+  els.createFollowupsBtn.disabled = !enabled;
+  els.ballparkBtn.disabled = !enabled;
+  els.proposalBtn.disabled = !enabled;
+  els.draftReplyBtn.disabled = !enabled;
+}
+
+function renderLeadList() {
+  const leads = listLeads();
+  els.leadCount.textContent = `${leads.length} total`;
+
+  if (!leads.length) {
+    els.leadsList.innerHTML = `<div class="muted">No leads yet. Click “New Lead”.</div>`;
+    return;
+  }
+
+  els.leadsList.innerHTML = leads
+    .map((l) => {
+      const selected = l.id === state.selectedLeadId ? "wf-lead-item selected" : "wf-lead-item";
+      const top = l.contact?.name || l.location?.address || l.id;
+      const sub = [l.status, l.jobType, l.sqftEstimate ? `${l.sqftEstimate} sqft` : null].filter(Boolean).join(" · ");
+      const score = typeof l.score === "number" ? l.score : 0;
+      return `<button class="${selected}" data-lead-id="${escapeHtml(l.id)}" type="button">
+        <div class="wf-lead-top">
+          <span class="wf-lead-name">${escapeHtml(top)}</span>
+          <span class="wf-score">${escapeHtml(score)}</span>
+        </div>
+        <div class="wf-lead-sub">${escapeHtml(sub || "—")}</div>
+      </button>`;
+    })
+    .join("");
+
+  els.leadsList.querySelectorAll("[data-lead-id]").forEach((btn) => {
+    btn.addEventListener("click", () => selectLead(btn.getAttribute("data-lead-id")));
+  });
+}
+
+function renderLeadDetail(lead) {
+  if (!lead) {
+    els.leadTitle.textContent = "Select a lead";
+    els.leadMeta.textContent = "—";
+    els.leadDetailBody.innerHTML = `<p class="muted">Click a lead on the left to view details and generate quotes/messages.</p>`;
+    setButtonsEnabled(false);
+    return;
+  }
+
+  setButtonsEnabled(true);
+  const name = lead.contact?.name || "Unnamed lead";
+  const loc = [lead.location?.city, lead.location?.state].filter(Boolean).join(", ");
+  els.leadTitle.textContent = name;
+  els.leadMeta.textContent = `${lead.status} · ${lead.source} · Updated ${fmtDate(lead.updatedAt)}${loc ? ` · ${loc}` : ""}`;
+
+  const contactBits = [
+    lead.contact?.phone ? `📱 ${escapeHtml(lead.contact.phone)}` : null,
+    lead.contact?.email ? `✉️ ${escapeHtml(lead.contact.email)}` : null
+  ]
+    .filter(Boolean)
+    .join("<br/>");
+
+  const goals = Array.isArray(lead.goals) && lead.goals.length ? lead.goals.join(", ") : "—";
+  const scoreReasons = Array.isArray(lead.scoreReasons) ? lead.scoreReasons.join(" ") : "—";
+
+  const missing = [];
+  if (!(Number.isFinite(Number(lead.sqftEstimate)) && Number(lead.sqftEstimate) > 0)) missing.push("Rough total sqft (or a window list W×H×qty).");
+  if (!hasAny(lead.location?.address) && !hasAny(lead.location?.city)) missing.push("Site address / city (for scheduling).");
+  if (lead.removalNeeded === null || lead.removalNeeded === undefined) missing.push("Existing film removal needed? (Y/N).");
+  if (!hasAny(lead.access)) missing.push("Access constraints (ground/ladder/lift, after-hours).");
+  if (!Array.isArray(lead.goals) || !lead.goals.length) missing.push("Top 1–2 goals (heat/glare/privacy/safety/looks).");
+  const glassKnown = lead.glass?.dualPane !== null || lead.glass?.lowE !== null || hasAny(lead.glass?.notes);
+  if (!glassKnown) missing.push("Glass type (dual-pane? low‑e? tempered/laminated if known).");
+  if (lead.jobType === "commercial") missing.push("COI required? Site contact + allowed work hours.");
+
+  const plays = [];
+  const goalText = (Array.isArray(lead.goals) ? lead.goals.join(" ") : "") + " " + String(lead.notes ?? "");
+  if (/privacy/i.test(goalText)) plays.push("Offer a day-privacy option (dual-reflective) + a frosted/decorative option for bathrooms/entry glass.");
+  if (/heat|glare|sun/i.test(goalText)) plays.push("Present 3-tier solar options (good/better/best) to lift AOV without adding sales time.");
+  if (/uv/i.test(goalText)) plays.push("Add UV/warranty language + upsell to a higher-spec film if the client mentions fading.");
+  if (lead.jobType === "commercial") plays.push("Suggest street-level anti-graffiti film and/or safety/security film as an add-on line item.");
+  if ((lead.filmCategory ?? "unsure") === "unsure") plays.push("Run a virtual measure (video walkthrough) before quoting firm pricing to reduce scope creep.");
+
+  els.leadDetailBody.innerHTML = `
+    <div class="wf-detail-grid">
+      <div class="wf-kv">
+        <div class="wf-k">Contact</div>
+        <div class="wf-v">${contactBits || "—"}</div>
+      </div>
+      <div class="wf-kv">
+        <div class="wf-k">Scope</div>
+        <div class="wf-v">
+          ${escapeHtml(lead.jobType || "—")} · ${escapeHtml(lead.filmCategory || "unsure")}<br/>
+          Sqft: <strong>${escapeHtml(lead.sqftEstimate ?? "—")}</strong> · Removal: <strong>${escapeHtml(lead.removalNeeded ?? "—")}</strong>
+        </div>
+      </div>
+      <div class="wf-kv">
+        <div class="wf-k">Goals</div>
+        <div class="wf-v">${escapeHtml(goals)}</div>
+      </div>
+      <div class="wf-kv">
+        <div class="wf-k">Score</div>
+        <div class="wf-v"><strong>${escapeHtml(lead.score ?? 0)}</strong><div class="muted">${escapeHtml(scoreReasons)}</div></div>
+      </div>
+      <div class="wf-kv wf-kv-wide">
+        <div class="wf-k">Next best action</div>
+        <div class="wf-v">${escapeHtml(lead.nextBestAction ?? "—")}</div>
+      </div>
+      <div class="wf-kv wf-kv-wide">
+        <div class="wf-k">Missing info (to close faster)</div>
+        <div class="wf-v">
+          ${missing.length ? `<ul>${missing.map((m) => `<li>${escapeHtml(m)}</li>`).join("")}</ul>` : "Nothing major missing."}
+        </div>
+      </div>
+      <div class="wf-kv wf-kv-wide">
+        <div class="wf-k">Revenue plays (upsells / positioning)</div>
+        <div class="wf-v">
+          ${plays.length ? `<ul>${plays.map((p) => `<li>${escapeHtml(p)}</li>`).join("")}</ul>` : "—"}
+        </div>
+      </div>
+      <div class="wf-kv wf-kv-wide">
+        <div class="wf-k">Notes</div>
+        <div class="wf-v">${escapeHtml(lead.notes ?? "—")}</div>
+      </div>
+    </div>
+  `;
+}
+
+function renderTasks(tasks) {
+  if (!tasks.length) {
+    els.tasksList.innerHTML = `<div class="muted">No tasks yet. Click “Create follow-ups”.</div>`;
+    return;
+  }
+  els.tasksList.innerHTML = tasks
+    .map((t) => {
+      return `<div class="wf-row">
+        <div class="wf-row-title">${escapeHtml(t.title)}</div>
+        <div class="muted">${escapeHtml(t.status)} · due ${escapeHtml(fmtDate(t.dueAt))}</div>
+      </div>`;
+    })
+    .join("");
+}
+
+function renderQuotes(quotes) {
+  if (!quotes.length) {
+    els.quotesList.innerHTML = `<div class="muted">No quotes yet.</div>`;
+    return;
+  }
+  els.quotesList.innerHTML = quotes
+    .map((q) => {
+      const title = q.kind === "ballpark" ? "Ballpark" : "Proposal";
+      let meta = fmtDate(q.createdAt);
+      if (q.outputs?.range) meta += ` · ${formatUsd(q.outputs.range.low)}–${formatUsd(q.outputs.range.high)}`;
+      if (q.outputs?.computed?.total) meta += ` · total ${formatUsd(q.outputs.computed.total)}`;
+      const actions =
+        q.kind === "proposal"
+          ? `<button class="action-btn secondary wf-open-proposal" data-quote-id="${escapeHtml(
+              q.id
+            )}" type="button">Open proposal</button>`
+          : "";
+      return `<div class="wf-row">
+        <div class="wf-row-title">${escapeHtml(title)}</div>
+        <div class="muted">${escapeHtml(meta)}</div>
+        ${actions ? `<div style="margin-top:8px">${actions}</div>` : ""}
+      </div>`;
+    })
+    .join("");
+
+  els.quotesList.querySelectorAll(".wf-open-proposal").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const quoteId = btn.getAttribute("data-quote-id");
+      const q = state.db.quotes.find((x) => x.id === quoteId);
+      const html = q?.outputs?.proposalHtml ?? "<p>No proposal HTML.</p>";
+      const win = window.open("", "_blank");
+      if (!win) return;
+      win.document.open();
+      win.document.write(html);
+      win.document.close();
+    });
+  });
+}
+
+function renderMessages(messages) {
+  if (!messages.length) {
+    els.messagesList.innerHTML = `<div class="muted">No drafts yet.</div>`;
+    return;
+  }
+  els.messagesList.innerHTML = messages
+    .map((m) => {
+      const head = `${m.channel?.toUpperCase?.() ?? "NOTE"} · ${fmtDate(m.createdAt)}`;
+      const body = m.body ? escapeHtml(m.body).replaceAll("\n", "<br/>") : "—";
+      const subject = m.subject ? `<div class="muted"><strong>Subject:</strong> ${escapeHtml(m.subject)}</div>` : "";
+      return `<div class="wf-row">
+        <div class="wf-row-title">${escapeHtml(head)}</div>
+        ${subject}
+        <div class="wf-message">${body}</div>
+        <div style="margin-top:8px">
+          <button class="action-btn secondary wf-copy" data-copy="${escapeHtml(m.body ?? "")}" type="button">Copy</button>
+        </div>
+      </div>`;
+    })
+    .join("");
+
+  els.messagesList.querySelectorAll(".wf-copy").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      await navigator.clipboard.writeText(btn.getAttribute("data-copy") ?? "");
+      btn.textContent = "Copied";
+      setTimeout(() => (btn.textContent = "Copy"), 1000);
+    });
+  });
+}
+
+function renderSelectedLead() {
+  const lead = state.selectedLeadId ? getLeadById(state.selectedLeadId) : null;
+  renderLeadDetail(lead ? reScoreLead(lead) : null);
+  if (!lead) {
+    renderTasks([]);
+    renderQuotes([]);
+    renderMessages([]);
+    return;
+  }
+  renderTasks(listTasksForLead(lead.id));
+  renderQuotes(listQuotesForLead(lead.id));
+  renderMessages(listMessagesForLead(lead.id));
+}
+
+function selectLead(leadId) {
+  state.selectedLeadId = leadId;
+  renderLeadList();
+  renderSelectedLead();
+}
+
+function openModal({ title, bodyHtml, copyText }) {
+  els.modalTitle.textContent = title;
+  els.modalBody.innerHTML = bodyHtml;
+  els.modalOverlay.style.display = "flex";
+  els.modalOverlay.setAttribute("aria-hidden", "false");
+  els.copyBtn.onclick = async () => {
+    await navigator.clipboard.writeText(copyText ?? "");
+    els.copyBtn.textContent = "Copied";
+    setTimeout(() => (els.copyBtn.textContent = "Copy"), 1000);
+  };
 }
 
 function closeModal() {
-  modal.classList.remove('open');
-  modal.setAttribute('aria-hidden', 'true');
-  document.body.style.overflow = '';
-  if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
-    lastFocusedElement.focus();
-  }
+  els.modalOverlay.style.display = "none";
+  els.modalOverlay.setAttribute("aria-hidden", "true");
 }
 
-function openCrewModal(crewId) {
-  const crew = crewDetails[crewId];
-  if (!crew) return;
+function refresh() {
+  els.timestamp.textContent = `Last refreshed: ${new Date().toLocaleString()}`;
+  renderLeadList();
+  renderSelectedLead();
+}
 
-  lastFocusedElement = document.activeElement;
-  crewModalTitle.textContent = crew.title;
-
-  const members = crew.members.map((member) => `<li>${escapeHtml(member)}</li>`).join('');
-  crewModalBody.innerHTML = `
-    <div class="script-section">
-      <h3>Status</h3>
-      <div class="script-content">${escapeHtml(crew.status)}\n${escapeHtml(crew.job)}\n${escapeHtml(crew.location)}</div>
+function newLeadFormHtml() {
+  return `
+    <div class="wf-quick">
+      <div class="muted" style="margin-bottom:8px;">Quick start</div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px;">
+        <button class="action-btn secondary" type="button" id="addSampleLeadsBtn">Add 4 sample leads</button>
+      </div>
     </div>
-    <div class="script-section">
-      <h3>Members</h3>
-      <div class="script-content"><ul>${members}</ul></div>
-    </div>
-    <div class="script-section">
-      <h3>Notes</h3>
-      <div class="script-content">${escapeHtml(crew.notes)}</div>
-    </div>
+    <form id="newLeadForm" class="wf-form">
+      <div class="wf-form-row"><label>Name</label><input name="name" placeholder="Customer name" /></div>
+      <div class="wf-form-row"><label>Phone</label><input name="phone" placeholder="(555) 555-5555" /></div>
+      <div class="wf-form-row"><label>Email</label><input name="email" placeholder="name@email.com" /></div>
+      <div class="wf-form-row">
+        <label>Job type</label>
+        <select name="jobType">
+          <option value="both">both</option>
+          <option value="residential">residential</option>
+          <option value="commercial">commercial</option>
+        </select>
+      </div>
+      <div class="wf-form-row"><label>Sqft (rough)</label><input name="sqftEstimate" type="number" step="1" min="0" placeholder="e.g. 180" /></div>
+      <div class="wf-form-row">
+        <label>Film category</label>
+        <select name="filmCategory">
+          <option value="unsure">unsure</option>
+          <option value="solar_interior">solar_interior</option>
+          <option value="solar_exterior">solar_exterior</option>
+          <option value="decorative_basic">decorative_basic</option>
+          <option value="decorative_premium">decorative_premium</option>
+          <option value="safety_security_8mil">safety_security_8mil</option>
+        </select>
+      </div>
+      <div class="wf-form-row"><label>Goals (comma separated)</label><input name="goals" placeholder="heat, glare, privacy" /></div>
+      <div class="wf-form-row"><label>Notes</label><textarea name="notes" placeholder="Lead context, constraints, etc."></textarea></div>
+      <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:10px;">
+        <button class="action-btn secondary" type="button" id="cancelNewLead">Cancel</button>
+        <button class="action-btn" type="submit">Create lead</button>
+      </div>
+    </form>
   `;
-
-  crewModal.classList.add('open');
-  crewModal.setAttribute('aria-hidden', 'false');
-  document.body.style.overflow = 'hidden';
-  closeCrewModalBtn.focus();
 }
 
-function closeCrewModal() {
-  crewModal.classList.remove('open');
-  crewModal.setAttribute('aria-hidden', 'true');
-  document.body.style.overflow = '';
-  if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
-    lastFocusedElement.focus();
+function wireNewLeadModal() {
+  const form = document.getElementById("newLeadForm");
+  const cancelBtn = document.getElementById("cancelNewLead");
+  const addSamplesBtn = document.getElementById("addSampleLeadsBtn");
+  cancelBtn.addEventListener("click", closeModal);
+  if (addSamplesBtn) {
+    addSamplesBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      addSamplesAndNotify();
+    });
   }
-}
-
-function openWeatherModal(index) {
-  if (!weatherState) return;
-  const day = weatherState.days[index];
-  if (!day) return;
-
-  lastFocusedElement = document.activeElement;
-  weatherModalTitle.textContent = `Forecast — ${day.label}`;
-  weatherModalBody.innerHTML = `
-    <div class="weather-detail-grid">
-      <div class="weather-detail-item">
-        <div class="weather-detail-label">Condition</div>
-        <div class="weather-detail-value">${escapeHtml(day.condition)}</div>
-      </div>
-      <div class="weather-detail-item">
-        <div class="weather-detail-label">High / Low</div>
-        <div class="weather-detail-value">${day.high}°F / ${day.low}°F</div>
-      </div>
-      <div class="weather-detail-item">
-        <div class="weather-detail-label">Precip Chance</div>
-        <div class="weather-detail-value">${day.precipProbability}%</div>
-      </div>
-      <div class="weather-detail-item">
-        <div class="weather-detail-label">Precip Total</div>
-        <div class="weather-detail-value">${day.precipTotal} in</div>
-      </div>
-      <div class="weather-detail-item">
-        <div class="weather-detail-label">Max Wind</div>
-        <div class="weather-detail-value">${day.windMax} mph</div>
-      </div>
-      <div class="weather-detail-item">
-        <div class="weather-detail-label">Sunrise / Sunset</div>
-        <div class="weather-detail-value">${day.sunrise} / ${day.sunset}</div>
-      </div>
-    </div>
-  `;
-
-  weatherModal.classList.add('open');
-  weatherModal.setAttribute('aria-hidden', 'false');
-  document.body.style.overflow = 'hidden';
-  closeWeatherModalBtn.focus();
-}
-
-function closeWeatherModal() {
-  weatherModal.classList.remove('open');
-  weatherModal.setAttribute('aria-hidden', 'true');
-  document.body.style.overflow = '';
-  if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
-    lastFocusedElement.focus();
-  }
-}
-
-function trapFocus(event) {
-  const activeModal = modal.classList.contains('open') ? modal : weatherModal.classList.contains('open') ? weatherModal : crewModal.classList.contains('open') ? crewModal : null;
-  if (!activeModal || event.key !== 'Tab') return;
-
-  const focusables = activeModal.querySelectorAll(focusableSelector);
-  if (!focusables.length) return;
-
-  const first = focusables[0];
-  const last = focusables[focusables.length - 1];
-  if (event.shiftKey && document.activeElement === first) {
-    event.preventDefault();
-    last.focus();
-  } else if (!event.shiftKey && document.activeElement === last) {
-    event.preventDefault();
-    first.focus();
-  }
-}
-
-function buildCalendar() {
-  const grid = document.getElementById('calendarGrid');
-  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  const viewYear = 2026;
-  const viewMonth = 1;
-  const startDay = new Date(viewYear, viewMonth, 1).getDay();
-  const totalDays = new Date(viewYear, viewMonth + 1, 0).getDate();
-
-  const now = new Date();
-  const isCurrentViewMonth = now.getFullYear() === viewYear && now.getMonth() === viewMonth;
-  const today = isCurrentViewMonth ? now.getDate() : -1;
-
-  grid.innerHTML = '';
-  days.forEach((day) => {
-    const headerCell = document.createElement('div');
-    headerCell.className = 'cal-day-header';
-    headerCell.textContent = day;
-    grid.appendChild(headerCell);
-  });
-
-  for (let i = 0; i < startDay; i += 1) {
-    const empty = document.createElement('div');
-    empty.className = 'cal-day empty';
-    grid.appendChild(empty);
-  }
-
-  for (let day = 1; day <= totalDays; day += 1) {
-    const dayCell = document.createElement('div');
-    const hasJob = crewSchedule[day];
-    dayCell.className = `cal-day${hasJob ? ' has-job' : ''}${day === today ? ' today' : ''}`;
-
-    let inner = `<span>${day}</span>`;
-    if (hasJob) {
-      const jobs = hasJob.jobs;
-      inner += '<div class="cal-dots">';
-      if (jobs.length === 1) {
-        inner += '<span class="cal-dot single"></span>';
-      } else {
-        jobs.forEach((_, index) => {
-          inner += `<span class="cal-dot ${index === 0 ? 'multi' : 'multi2'}"></span>`;
-        });
-      }
-      inner += '</div>';
-
-      inner += `<div class="cal-tooltip"><div class="tt-title">${jobs.length} Job${jobs.length > 1 ? 's' : ''} — Feb ${day}</div>`;
-      jobs.forEach((job) => {
-        inner += `<div class="tt-job"><div class="tt-job-name">${escapeHtml(job.name)}</div><div class="tt-crew">👷 ${escapeHtml(job.crew)}</div><div class="tt-loc">📍 ${escapeHtml(job.loc)}</div></div>`;
-      });
-      inner += '</div>';
-    }
-
-    dayCell.innerHTML = inner;
-    grid.appendChild(dayCell);
-  }
-}
-
-function formatWeatherLabel(code) {
-  if (typeof code !== 'number') return 'Unknown';
-  return weatherCodeLabels.get(code) || 'Unknown';
-}
-
-function getDayLabel(dateString) {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
-}
-
-function formatMaybeNumber(value, digits = 0) {
-  if (!Number.isFinite(value)) return '--';
-  return digits > 0 ? value.toFixed(digits) : Math.round(value);
-}
-
-function setWeatherError(message) {
-  const tempEl = document.getElementById('weatherTemp');
-  const condEl = document.getElementById('weatherCond');
-  const updatedEl = document.getElementById('weatherUpdated');
-  const forecastEl = document.getElementById('weatherForecast');
-
-  tempEl.textContent = '--';
-  condEl.textContent = message;
-  condEl.classList.add('weather-error');
-  updatedEl.textContent = 'Weather unavailable';
-  forecastEl.innerHTML = '';
-}
-
-async function loadWeather() {
-  const tempEl = document.getElementById('weatherTemp');
-  const condEl = document.getElementById('weatherCond');
-  const updatedEl = document.getElementById('weatherUpdated');
-  const forecastEl = document.getElementById('weatherForecast');
-
-  try {
-    const url = new URL('https://api.open-meteo.com/v1/forecast');
-    url.searchParams.set('latitude', WEATHER.latitude);
-    url.searchParams.set('longitude', WEATHER.longitude);
-    url.searchParams.set('current', 'temperature_2m,weather_code');
-    url.searchParams.set('daily', 'temperature_2m_max,temperature_2m_min,weather_code,precipitation_probability_max,precipitation_sum,wind_speed_10m_max,sunrise,sunset');
-    url.searchParams.set('temperature_unit', 'fahrenheit');
-    url.searchParams.set('wind_speed_unit', 'mph');
-    url.searchParams.set('precipitation_unit', 'inch');
-    url.searchParams.set('timezone', 'auto');
-    url.searchParams.set('forecast_days', '7');
-
-    const response = await fetch(url.toString());
-    if (!response.ok) throw new Error('Weather request failed');
-    const data = await response.json();
-
-    const current = data.current || {};
-    const currentTemp = current.temperature_2m;
-    const currentCode = current.weather_code ?? current.weathercode;
-    const currentTime = current.time;
-
-    tempEl.textContent = Number.isFinite(currentTemp) ? `${Math.round(currentTemp)}°F` : '--';
-    condEl.textContent = formatWeatherLabel(currentCode);
-    condEl.classList.remove('weather-error');
-    updatedEl.textContent = currentTime ? `Updated ${new Date(currentTime).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}` : 'Updated recently';
-
-    const daily = data.daily || {};
-    const times = daily.time || [];
-    const highs = daily.temperature_2m_max || [];
-    const lows = daily.temperature_2m_min || [];
-    const codes = daily.weather_code || daily.weathercode || [];
-    const precipProb = daily.precipitation_probability_max || [];
-    const precipSum = daily.precipitation_sum || [];
-    const windMax = daily.wind_speed_10m_max || [];
-    const sunrises = daily.sunrise || [];
-    const sunsets = daily.sunset || [];
-
-    const rows = times.map((time, index) => {
-      const label = getDayLabel(time);
-      const high = highs[index];
-      const low = lows[index];
-      const code = codes[index];
-      const temps = `${formatMaybeNumber(high)}° / ${formatMaybeNumber(low)}°`;
-      return `<div class="weather-day" tabindex="0" role="button" aria-label="View forecast for ${label}" data-weather-index="${index}"><div><div class="weather-day-name">${label}</div><div class="weather-day-cond">${formatWeatherLabel(code)}</div></div><div class="weather-day-temps">${temps}</div></div>`;
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const data = new FormData(form);
+    const payload = Object.fromEntries(data.entries());
+    const createdAt = nowIso();
+    const lead = reScoreLead({
+      id: newId("lead"),
+      createdAt,
+      updatedAt: createdAt,
+      status: "NEW",
+      source: "manual",
+      contact: { name: payload.name || null, phone: normalizePhone(payload.phone), email: normalizeEmail(payload.email) },
+      location: { address: null, city: null, state: null },
+      jobType: payload.jobType || "both",
+      sqftEstimate: payload.sqftEstimate ? Number(payload.sqftEstimate) : null,
+      filmCategory: payload.filmCategory || "unsure",
+      goals: payload.goals ? String(payload.goals).split(",").map((s) => s.trim()).filter(Boolean) : [],
+      glass: { dualPane: null, lowE: null, notes: null },
+      removalNeeded: null,
+      access: null,
+      notes: payload.notes || null,
+      tags: [],
+      history: [{ at: createdAt, type: "LEAD_CREATED", by: "user", detail: { source: "manual" } }]
     });
 
-    weatherState = {
-      days: times.map((time, index) => ({
-        label: getDayLabel(time),
-        condition: formatWeatherLabel(codes[index]),
-        high: formatMaybeNumber(highs[index]),
-        low: formatMaybeNumber(lows[index]),
-        precipProbability: formatMaybeNumber(precipProb[index]),
-        precipTotal: formatMaybeNumber(precipSum[index], 2),
-        windMax: formatMaybeNumber(windMax[index]),
-        sunrise: sunrises[index] ? new Date(sunrises[index]).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }) : '--',
-        sunset: sunsets[index] ? new Date(sunsets[index]).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }) : '--'
-      }))
-    };
-
-    forecastEl.innerHTML = rows.join('');
-  } catch (error) {
-    setWeatherError('Unable to load weather');
-  }
-}
-
-function updateTimestamp() {
-  const el = document.getElementById('timestamp');
-  el.textContent = new Date().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' });
-}
-
-function refreshData() {
-  updateTimestamp();
-  const button = document.getElementById('syncNowBtn');
-  button.textContent = '✅ Synced';
-  button.style.borderColor = 'var(--green)';
-  button.style.color = 'var(--green)';
-
-  setTimeout(() => {
-    button.textContent = '⟳ Sync Now';
-    button.style.borderColor = '';
-    button.style.color = '';
-  }, 2000);
-}
-
-function animateForecastBars() {
-  const card = document.querySelector('.forecast-card');
-  if (!card) return;
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
-      document.querySelectorAll('.fb-bar').forEach((bar) => {
-        const target = bar.getAttribute('data-target');
-        setTimeout(() => {
-          bar.style.width = target;
-        }, 200);
-      });
-      observer.unobserve(entry.target);
-    });
-  }, { threshold: 0.3 });
-
-  observer.observe(card);
-}
-
-document.addEventListener('click', (event) => {
-  const actionTrigger = event.target.closest('[data-action]');
-  if (actionTrigger) {
-    openModal(actionTrigger.getAttribute('data-action'));
-    return;
-  }
-
-  const crewTrigger = event.target.closest('[data-crew]');
-  if (crewTrigger) {
-    openCrewModal(crewTrigger.getAttribute('data-crew'));
-    return;
-  }
-
-  const weatherTrigger = event.target.closest('[data-weather-index]');
-  if (weatherTrigger) {
-    openWeatherModal(Number(weatherTrigger.getAttribute('data-weather-index')));
-    return;
-  }
-
-  const copyTrigger = event.target.closest('[data-copy-id]');
-  if (copyTrigger) {
-    copyText(copyTrigger.getAttribute('data-copy-id'), copyTrigger.getAttribute('data-copy-type'), copyTrigger);
-    return;
-  }
-
-  if (event.target === modal) {
+    state.db.leads.push(lead);
+    saveDb(state.db);
     closeModal();
-  }
+    refresh();
+    selectLead(lead.id);
+  });
+}
 
-  if (event.target === weatherModal) {
-    closeWeatherModal();
-  }
+function addSampleLeads(count) {
+  const now = nowIso();
+  const samples = [
+    {
+      contact: { name: "Jamie Rivera", phone: "+14105550811", email: "jamie.rivera@example.com" },
+      location: { address: "48 Bayview Ct", city: "Annapolis", state: "MD" },
+      jobType: "residential",
+      sqftEstimate: 120,
+      filmCategory: "decorative_basic",
+      goals: ["privacy", "looks"],
+      glass: { dualPane: null, lowE: null, notes: "Bathroom + front door sidelites. Wants bright frost." },
+      removalNeeded: false,
+      access: "ground",
+      notes: "Needs install this week; prefers morning."
+    },
+    {
+      contact: { name: "Sutton Property Mgmt", phone: "+14435550777", email: "ops@suttonpm.example.com" },
+      location: { address: "200 Commerce Park", city: "Columbia", state: "MD" },
+      jobType: "commercial",
+      sqftEstimate: 950,
+      filmCategory: "solar_exterior",
+      goals: ["heat", "glare"],
+      glass: { dualPane: null, lowE: null, notes: "South-facing office wall. Wants minimal mirror look." },
+      removalNeeded: null,
+      access: "interior access; 2nd floor; ladder likely",
+      notes: "COI required. Can only work after 6pm or weekends."
+    },
+    {
+      contact: { name: "Chris Park", phone: "+14105550992", email: "chris.park@example.com" },
+      location: { address: "17 W Lombard St", city: "Baltimore", state: "MD" },
+      jobType: "residential",
+      sqftEstimate: 210,
+      filmCategory: "safety_security_8mil",
+      goals: ["safety"],
+      glass: { dualPane: null, lowE: null, notes: "Recent break-in attempt. Wants clear safety film." },
+      removalNeeded: false,
+      access: "ground + step ladder",
+      notes: "Wants the strongest option without changing appearance."
+    },
+    {
+      contact: { name: "Mina Retail", phone: "+14105550666", email: "manager@minaretail.example.com" },
+      location: { address: "88 Fleet St", city: "Baltimore", state: "MD" },
+      jobType: "commercial",
+      sqftEstimate: 320,
+      filmCategory: "anti_graffiti",
+      goals: ["looks", "safety"],
+      glass: { dualPane: null, lowE: null, notes: "Street-level storefront. Wants sacrificial layer." },
+      removalNeeded: true,
+      access: "street-level; parking is tight",
+      notes: "Must keep store open during install if possible."
+    }
+  ];
 
-  if (event.target === crewModal) {
-    closeCrewModal();
+  const toAdd = samples.slice(0, Math.max(1, Math.min(samples.length, count)));
+  const createdIds = [];
+  for (const s of toAdd) {
+    const createdAt = now;
+    const lead = reScoreLead({
+      id: newId("lead"),
+      createdAt,
+      updatedAt: createdAt,
+      status: "NEW",
+      source: "example",
+      contact: { name: s.contact.name, phone: normalizePhone(s.contact.phone), email: normalizeEmail(s.contact.email) },
+      location: s.location,
+      jobType: s.jobType,
+      sqftEstimate: s.sqftEstimate,
+      filmCategory: s.filmCategory,
+      goals: s.goals,
+      glass: s.glass,
+      removalNeeded: s.removalNeeded,
+      access: s.access,
+      notes: s.notes,
+      tags: ["sample"],
+      history: [{ at: createdAt, type: "LEAD_CREATED", by: "system", detail: { source: "example" } }]
+    });
+    state.db.leads.push(lead);
+    createdIds.push(lead.id);
   }
+  saveDb(state.db);
+  return { created: createdIds.length, ids: createdIds };
+}
+
+function addSamplesAndNotify() {
+  const result = addSampleLeads(4);
+  const firstId = result.ids?.[0] ?? null;
+  closeModal();
+  refresh();
+  if (firstId) selectLead(firstId);
+  openModal({
+    title: "Sample leads added",
+    bodyHtml: `<p class="muted">Added <strong>${result.created}</strong> sample leads.</p>`,
+    copyText: ""
+  });
+}
+
+function exportDb() {
+  const blob = new Blob([JSON.stringify(state.db, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `window-film-workflow-db-${new Date().toISOString().slice(0, 10)}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+function importDbPrompt() {
+  const html = `
+    <div class="muted" style="margin-bottom:10px;">Paste a previously exported JSON database.</div>
+    <textarea id="importText" style="width:100%; min-height:240px;"></textarea>
+    <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:10px;">
+      <button class="action-btn secondary" type="button" id="cancelImport">Cancel</button>
+      <button class="action-btn" type="button" id="doImport">Import</button>
+    </div>
+  `;
+  openModal({ title: "Import database", bodyHtml: html, copyText: "" });
+  document.getElementById("cancelImport").addEventListener("click", closeModal);
+  document.getElementById("doImport").addEventListener("click", () => {
+    const raw = document.getElementById("importText").value;
+    try {
+      const parsed = JSON.parse(raw);
+      state.db = parsed;
+      saveDb(state.db);
+      closeModal();
+      refresh();
+    } catch (e) {
+      alert("Invalid JSON.");
+    }
+  });
+}
+
+els.newLeadBtn.addEventListener("click", () => {
+  openModal({ title: "New lead", bodyHtml: newLeadFormHtml(), copyText: "" });
+  wireNewLeadModal();
+});
+if (els.seedLeadsBtn) {
+  els.seedLeadsBtn.addEventListener("click", () => addSamplesAndNotify());
+}
+els.refreshBtn.addEventListener("click", refresh);
+els.exportBtn.addEventListener("click", exportDb);
+els.importBtn.addEventListener("click", importDbPrompt);
+
+els.closeModalBtn.addEventListener("click", closeModal);
+els.closeBtn.addEventListener("click", closeModal);
+els.modalOverlay.addEventListener("click", (e) => {
+  if (e.target === els.modalOverlay) closeModal();
 });
 
-document.addEventListener('keydown', (event) => {
-  if ((event.key === 'Enter' || event.key === ' ') && event.target.classList.contains('alert-item')) {
-    event.preventDefault();
-    openModal(event.target.getAttribute('data-action'));
-  }
-
-  if ((event.key === 'Enter' || event.key === ' ') && event.target.classList.contains('weather-day')) {
-    event.preventDefault();
-    openWeatherModal(Number(event.target.getAttribute('data-weather-index')));
-  }
-
-  if (event.key === 'Escape') {
-    if (modal.classList.contains('open')) closeModal();
-    if (weatherModal.classList.contains('open')) closeWeatherModal();
-    if (crewModal.classList.contains('open')) closeCrewModal();
-  }
-
-  trapFocus(event);
+els.createFollowupsBtn.addEventListener("click", () => {
+  if (!state.selectedLeadId) return;
+  createDefaultFollowUpsForLead(state.selectedLeadId);
+  refresh();
 });
 
-document.getElementById('syncNowBtn').addEventListener('click', refreshData);
-closeModalBtn.addEventListener('click', closeModal);
-closeWeatherModalBtn.addEventListener('click', closeWeatherModal);
-closeCrewModalBtn.addEventListener('click', closeCrewModal);
+els.ballparkBtn.addEventListener("click", () => {
+  if (!state.selectedLeadId) return;
+  const quote = generateBallparkQuoteForLead(state.selectedLeadId);
+  const text = quote?.outputs?.text ?? "No text generated.";
+  openModal({ title: "Ballpark quote", bodyHtml: `<pre class="wf-pre">${escapeHtml(text)}</pre>`, copyText: text });
+  refresh();
+});
 
-buildCalendar();
-animateForecastBars();
-updateTimestamp();
-loadWeather();
-setInterval(loadWeather, 30 * 60 * 1000);
-setInterval(updateTimestamp, 60000);
+els.proposalBtn.addEventListener("click", () => {
+  if (!state.selectedLeadId) return;
+  const quote = generateProposalForLead(state.selectedLeadId);
+  if (quote?.error) {
+    openModal({ title: "Missing sqft", bodyHtml: `<p class="muted">Add rough sqft to generate a proposal.</p>`, copyText: "" });
+    return;
+  }
+  openModal({ title: "Proposal created", bodyHtml: `<p>Proposal generated. Open it from the Quotes panel.</p>`, copyText: "" });
+  refresh();
+});
+
+els.draftReplyBtn.addEventListener("click", () => {
+  if (!state.selectedLeadId) return;
+  const msg = draftReplyForLead(state.selectedLeadId);
+  const body = msg?.body ?? "";
+  openModal({ title: "Draft reply", bodyHtml: `<pre class="wf-pre">${escapeHtml(body)}</pre>`, copyText: body });
+  refresh();
+});
+
+state.db = loadDb();
+refresh();
