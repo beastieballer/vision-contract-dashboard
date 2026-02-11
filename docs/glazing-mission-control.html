@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VISION CONTRACT - Mission Control</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+<div class="container">
+<header>
+<div>
+<h1>🔷 VISION CONTRACT — <span class="glow">Mission Control</span><span class="live-dot" aria-hidden="true"></span></h1>
+<p class="last-updated">Last synced: <span id="timestamp"></span></p>
+</div>
+<button class="refresh-btn" id="syncNowBtn" type="button">⟳ Sync Now</button>
+</header>
+
+<div class="impact-summary">
+<h3>REVENUE IMPACT — IMMEDIATE ATTENTION REQUIRED</h3>
+<div class="impact-grid">
+<button type="button" class="impact-item" data-action="coFellsPoint"><div class="impact-value">$850</div><div class="impact-label">Potential CO Revenue (Fells Point)</div></button>
+<button type="button" class="impact-item" data-action="crewCharlie"><div class="impact-value">$850/day</div><div class="impact-label">Crew Idle Loss (Harbor East)</div></button>
+<button type="button" class="impact-item" data-action="invoiceJohnsHopkins"><div class="impact-value">$42,350</div><div class="impact-label">Aged Receivables at Risk</div></button>
+<button type="button" class="impact-item" data-action="laborOverrun"><div class="impact-value">$2,850</div><div class="impact-label">Labor Overrun to Investigate</div></button>
+</div>
+</div>
+
+<div class="grid">
+<div class="card kpi-card">
+<h2>💰 Revenue (MTD)</h2>
+<div class="metric-value">$127,450</div>
+<div class="metric-label">Target: $150,000 (85%)</div>
+<div class="kpi-actions">
+<button class="action-btn" type="button" data-action="kpiRevenueBreakdown">Breakdown</button>
+<button class="action-btn secondary" type="button" data-action="kpiRevenueBoost">Boost Plan</button>
+</div>
+</div>
+<div class="card kpi-card">
+<h2>📋 Active Jobs</h2>
+<div class="metric-value">14</div>
+<div class="metric-label">3 starting this week</div>
+<div class="kpi-actions">
+<button class="action-btn" type="button" data-action="kpiJobsViewAll">View All</button>
+<button class="action-btn secondary" type="button" data-action="kpiJobsPriority">Priority</button>
+</div>
+</div>
+<div class="card kpi-card">
+<h2>⚠️ Change Orders</h2>
+<div class="metric-value metric-warning">7</div>
+<div class="metric-label">$12,300 pending approval</div>
+<div class="kpi-actions">
+<button class="action-btn" type="button" data-action="kpiCOReviewAll">Review All</button>
+<button class="action-btn secondary" type="button" data-action="kpiCOUrgent">Urgent</button>
+</div>
+</div>
+<div class="card kpi-card">
+<h2>⏱️ Crew Utilization</h2>
+<div class="metric-value metric-warning">82%</div>
+<div class="metric-label">5 of 7 crews active</div>
+<div class="kpi-actions">
+<button class="action-btn" type="button" data-action="kpiCrewStatus">Status</button>
+<button class="action-btn secondary" type="button" data-action="kpiCrewOptimize">Optimize</button>
+</div>
+</div>
+</div>
+
+<div class="grid">
+<div class="card large-card">
+<h2>⚠️ Change Order Predictor</h2>
+<div class="alert-item" data-action="coFellsPoint" tabindex="0" role="button" aria-label="Open Fells Point change order script">
+<h3>Fells Point Storefront — Field Variance <span class="badge badge-high">HIGH RISK</span></h3>
+<p>Field measurements show 2.5&quot; variance from quote. Opening width: 84.5&quot; (quoted 82&quot;). Potential CO: $850</p>
+<div class="action-row">
+<button class="action-btn" type="button" data-action="coFellsPoint">📞 Call Script</button>
+<button class="action-btn secondary" type="button" data-action="coFellsPoint">✉️ Email Template</button>
+</div>
+</div>
+<div class="alert-item medium" data-action="coCantonLofts" tabindex="0" role="button" aria-label="Open Canton Lofts change order script">
+<h3>Canton Lofts — Glass Spec Change <span class="badge badge-medium">MEDIUM RISK</span></h3>
+<p>Architect requested upgrade from clear to low-E glass. 12 units affected. Potential CO: $3,200</p>
+<div class="action-row">
+<button class="action-btn" type="button" data-action="coCantonLofts">📞 Call Script</button>
+<button class="action-btn secondary" type="button" data-action="coCantonLofts">✉️ Email Template</button>
+</div>
+</div>
+</div>
+<div class="card">
+<h2>💸 Profit Leakage Alerts</h2>
+<div class="alert-item" data-action="invoiceJohnsHopkins" tabindex="0" role="button" aria-label="Open Johns Hopkins collection script">
+<h3>Johns Hopkins Invoice Overdue</h3>
+<p>$18,400 invoice is 45 days past due. Last contact: 3 weeks ago.</p>
+<div class="action-row">
+<button class="action-btn" type="button" data-action="invoiceJohnsHopkins">📞 Collection Call</button>
+<button class="action-btn secondary" type="button" data-action="invoiceJohnsHopkins">✉️ Final Notice</button>
+</div>
+</div>
+<div class="alert-item" data-action="laborOverrun" tabindex="0" role="button" aria-label="Open Federal Hill labor overrun script">
+<h3>Federal Hill Labor Overrun</h3>
+<p>188% over estimate. Budgeted: $1,515 | Actual: $4,365 | Loss: $2,850</p>
+<div class="action-row">
+<button class="action-btn" type="button" data-action="laborOverrun">📞 Foreman Call</button>
+</div>
+</div>
+</div>
+</div>
+
+<div class="grid">
+<div class="card large-card">
+<h2>⏱️ Crew Dead Time Heatmap (Today)</h2>
+<div class="heatmap-bar"><div class="heatmap-label"><span><strong>Team Alpha</strong></span><span>0.5 hrs idle</span></div><div class="heatmap-bar-container"><div class="heatmap-bar-fill good" style="width:6%">6%</div></div></div>
+<div class="heatmap-bar"><div class="heatmap-label"><span><strong>Team Bravo</strong></span><span>1.2 hrs idle</span></div><div class="heatmap-bar-container"><div class="heatmap-bar-fill good" style="width:15%">15%</div></div></div>
+<div class="heatmap-bar"><div class="heatmap-label"><span><strong>Team Charlie</strong> ⚠️</span><span class="status-critical">4.8 hrs idle</span></div><div class="heatmap-bar-container"><div class="heatmap-bar-fill critical" style="width:60%">60%</div></div><button class="action-btn" type="button" data-action="crewCharlie" style="margin-top:8px">📞 Call Foreman</button></div>
+<div class="heatmap-bar"><div class="heatmap-label"><span><strong>Team Delta</strong></span><span>0.8 hrs idle</span></div><div class="heatmap-bar-container"><div class="heatmap-bar-fill good" style="width:10%">10%</div></div></div>
+<div class="heatmap-bar"><div class="heatmap-label"><span><strong>Team Echo</strong></span><span>2.1 hrs idle</span></div><div class="heatmap-bar-container"><div class="heatmap-bar-fill warning" style="width:26%">26%</div></div></div>
+<div class="heatmap-bar"><div class="heatmap-label"><span><strong>Team Foxtrot</strong></span><span>0.3 hrs idle</span></div><div class="heatmap-bar-container"><div class="heatmap-bar-fill good" style="width:4%">4%</div></div></div>
+<div class="heatmap-bar"><div class="heatmap-label"><span><strong>Team Golf</strong></span><span>1.5 hrs idle</span></div><div class="heatmap-bar-container"><div class="heatmap-bar-fill good" style="width:19%">19%</div></div></div>
+</div>
+<div class="card">
+<h2>📅 Crew Schedule — February 2026</h2>
+<div class="calendar-grid" id="calendarGrid"></div>
+</div>
+<div class="card weather-card">
+<h2>Weather — Baltimore, MD</h2>
+<div class="weather-current">
+<div class="weather-temp" id="weatherTemp">--</div>
+<div class="weather-cond" id="weatherCond">Loading...</div>
+</div>
+<div class="weather-meta" id="weatherUpdated">Updating...</div>
+<div class="weather-forecast" id="weatherForecast"></div>
+</div>
+</div>
+
+<div class="grid">
+<div class="card">
+<h2>📦 Material Lead-Time Tracker</h2>
+<div class="material-status"><div class="material-name">⚠️ Cardinal Glass IGU — DELAYED</div><div class="material-detail">Original: Feb 6 → New ETA: Feb 11 (+5 days)</div><div class="material-detail">Affects: Canton Lofts Job #2849</div><button class="action-btn" type="button" data-action="materialDelay" style="margin-top:8px">📞 Call Supplier</button><button class="action-btn secondary" type="button" data-action="materialDelay" style="margin-top:8px">✉️ Email Client</button></div>
+<div class="material-status ontime"><div class="material-name">✅ Viracon Low-E Units — ON TIME</div><div class="material-detail">ETA: Feb 7 (Tomorrow)</div><div class="material-detail">For: Harbor East Tower</div></div>
+<div class="material-status ontime"><div class="material-name">✅ Aluminum Frames (Black) — ON TIME</div><div class="material-detail">ETA: Feb 8</div><div class="material-detail">For: Fells Point Storefront</div></div>
+</div>
+<div class="card">
+<h2>📅 Upcoming Schedule</h2>
+<div class="schedule-item"><div class="schedule-time">Tomorrow, 7:00 AM</div><div class="schedule-job">Job #2847 — Storefront Install</div><div class="schedule-location">📍 Fells Point, Baltimore</div></div>
+<div class="schedule-item"><div class="schedule-time">Tomorrow, 8:30 AM</div><div class="schedule-job">Job #2851 — Window Replacement</div><div class="schedule-location">📍 Towson, MD</div></div>
+<div class="schedule-item"><div class="schedule-time">Thursday, 7:00 AM</div><div class="schedule-job">Job #2849 — Curtain Wall Repair</div><div class="schedule-location">📍 Inner Harbor, Baltimore</div></div>
+<div class="schedule-item"><div class="schedule-time">Friday, 9:00 AM</div><div class="schedule-job">Job #2853 — Glass Railing Install</div><div class="schedule-location">📍 Canton, Baltimore</div></div>
+</div>
+<div class="card">
+<h2>📦 Inventory Alerts</h2>
+<div class="inventory-item"><span>1/4&quot; Clear Tempered</span><span class="stock-level status-critical">12 sheets</span></div>
+<div class="inventory-item"><span>Low-E Insulated Units</span><span class="stock-level status-warning">8 units</span></div>
+<div class="inventory-item"><span>Aluminum Frames (Black)</span><span class="stock-level status-good">47 units</span></div>
+<div class="inventory-item"><span>Silicone Sealant</span><span class="stock-level status-warning">6 tubes</span></div>
+<div class="inventory-item"><span>Setting Blocks</span><span class="stock-level status-good">240 pcs</span></div>
+<div class="inventory-item"><span>Safety Glass Laminate</span><span class="stock-level status-critical">3 sheets</span></div>
+</div>
+<div class="card">
+<h2>💳 AR Aging</h2>
+<div class="inventory-item"><span>Current (0-30 days)</span><span class="stock-level status-good">$45,200</span></div>
+<div class="inventory-item"><span>31-60 days</span><span class="stock-level status-warning">$18,900</span></div>
+<div class="inventory-item"><span>61-90 days</span><span class="stock-level status-critical">$23,400</span></div>
+<div class="inventory-item"><span>90+ days</span><span class="stock-level status-critical">$8,750</span></div>
+</div>
+</div>
+
+<div class="grid">
+<div class="card">
+<h2>👷 Crew Status</h2>
+<button type="button" class="crew-member" data-crew="alpha"><span class="crew-name">Team Alpha</span><span class="crew-status active">Active</span></button>
+<button type="button" class="crew-member" data-crew="bravo"><span class="crew-name">Team Bravo</span><span class="crew-status active">Active</span></button>
+<button type="button" class="crew-member" data-crew="charlie"><span class="crew-name">Team Charlie</span><span class="crew-status idle">Idle — 4.8hrs</span></button>
+<button type="button" class="crew-member" data-crew="delta"><span class="crew-name">Team Delta</span><span class="crew-status active">Active</span></button>
+<button type="button" class="crew-member" data-crew="echo"><span class="crew-name">Team Echo</span><span class="crew-status active">Active</span></button>
+<button type="button" class="crew-member" data-crew="foxtrot"><span class="crew-name">Team Foxtrot</span><span class="crew-status active">Active</span></button>
+<button type="button" class="crew-member" data-crew="golf"><span class="crew-name">Team Golf</span><span class="crew-status active">Active</span></button>
+</div>
+</div>
+
+<div class="forecast-card">
+<div class="forecast-header">
+<div class="forecast-title">
+<h2>🤖 Revenue Saved by Forecast AI</h2>
+<span class="forecast-badge">● AI-Powered</span>
+</div>
+<div class="forecast-total">
+<div class="forecast-total-label">MTD Total Saved</div>
+<div class="forecast-total-value">$47,820</div>
+<div class="forecast-total-sub">↑ 23% vs last month</div>
+</div>
+</div>
+
+<div class="forecast-metrics">
+<div class="forecast-metric">
+<div class="fm-icon">⏱️</div>
+<div class="fm-value">$18,400</div>
+<div class="fm-label">Dead Time Reduction</div>
+<div class="fm-detail">142 crew-hrs recovered</div>
+</div>
+<div class="forecast-metric">
+<div class="fm-icon">💸</div>
+<div class="fm-value">$14,250</div>
+<div class="fm-label">Profit Leakage Prevented</div>
+<div class="fm-detail">6 overruns caught early</div>
+</div>
+<div class="forecast-metric">
+<div class="fm-icon">📋</div>
+<div class="fm-value">$9,870</div>
+<div class="fm-label">Optimized Change Orders</div>
+<div class="fm-detail">11 COs processed faster</div>
+</div>
+<div class="forecast-metric">
+<div class="fm-icon">📦</div>
+<div class="fm-value">$5,300</div>
+<div class="fm-label">Material Delay Mitigation</div>
+<div class="fm-detail">3 delays rerouted</div>
+</div>
+</div>
+
+<div class="forecast-bar-section">
+<div class="forecast-bar-row"><span class="fb-label">Dead Time</span><div class="fb-bar-container"><div class="fb-bar green" style="width:0%" data-target="38.5%">38.5%</div></div><span class="fb-amount">$18,400</span></div>
+<div class="forecast-bar-row"><span class="fb-label">Profit Leakage</span><div class="fb-bar-container"><div class="fb-bar cyan" style="width:0%" data-target="29.8%">29.8%</div></div><span class="fb-amount">$14,250</span></div>
+<div class="forecast-bar-row"><span class="fb-label">Change Orders</span><div class="fb-bar-container"><div class="fb-bar purple" style="width:0%" data-target="20.6%">20.6%</div></div><span class="fb-amount">$9,870</span></div>
+<div class="forecast-bar-row"><span class="fb-label">Material Delays</span><div class="fb-bar-container"><div class="fb-bar orange" style="width:0%" data-target="11.1%">11.1%</div></div><span class="fb-amount">$5,300</span></div>
+</div>
+
+<div class="forecast-footer">
+<div class="forecast-footer-text">Forecast AI has saved VISION CONTRACT <span>$47,820</span> this month across 14 active jobs</div>
+<div class="ytd-badge"><div><div class="ytd-label">YTD Savings</div><div class="ytd-value">$284,600</div></div></div>
+</div>
+</div>
+
+</div>
+
+<div id="scriptModal" class="modal" aria-hidden="true">
+<div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+<div class="modal-header">
+<h2 id="modalTitle">Action Scripts</h2>
+<button class="close" id="closeModalBtn" type="button" aria-label="Close action scripts">×</button>
+</div>
+<div id="modalBody"></div>
+</div>
+</div>
+
+<div id="weatherModal" class="modal" aria-hidden="true">
+<div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="weatherModalTitle">
+<div class="modal-header">
+<h2 id="weatherModalTitle">Forecast Details</h2>
+<button class="close" id="closeWeatherModalBtn" type="button" aria-label="Close weather details">×</button>
+</div>
+<div id="weatherModalBody"></div>
+</div>
+</div>
+
+<div id="crewModal" class="modal" aria-hidden="true">
+<div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="crewModalTitle">
+<div class="modal-header">
+<h2 id="crewModalTitle">Crew Details</h2>
+<button class="close" id="closeCrewModalBtn" type="button" aria-label="Close crew details">×</button>
+</div>
+<div id="crewModalBody"></div>
+</div>
+</div>
+
+<script src="./glazing-app.js"></script>
+</body>
+</html>
