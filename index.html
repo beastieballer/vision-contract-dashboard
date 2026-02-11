@@ -30,10 +30,58 @@
 </div>
 
 <div class="grid">
-<button type="button" class="card kpi-card" data-action="kpiRevenue"><h2>💰 Revenue (MTD)</h2><div class="metric-value">$127,450</div><div class="metric-label">Target: $150,000 (85%)</div></button>
-<button type="button" class="card kpi-card" data-action="kpiActiveJobs"><h2>📋 Active Jobs</h2><div class="metric-value">14</div><div class="metric-label">3 starting this week</div></button>
-<button type="button" class="card kpi-card" data-action="kpiChangeOrders"><h2>⚠️ Change Orders</h2><div class="metric-value metric-warning">7</div><div class="metric-label">$12,300 pending approval</div></button>
-<button type="button" class="card kpi-card" data-action="kpiCrewUtilization"><h2>⏱️ Crew Utilization</h2><div class="metric-value metric-warning">82%</div><div class="metric-label">5 of 7 crews active</div></button>
+<div class="card kpi-card">
+<h2>💰 Revenue (MTD)</h2>
+<div class="metric-value">$127,450</div>
+<div class="metric-label">Target: $150,000 (85%)</div>
+<div class="kpi-meta">
+<div class="kpi-meta-row"><span>Captured</span><span class="kpi-value-good">$118,300</span></div>
+<div class="kpi-meta-row"><span>At risk</span><span class="kpi-value-bad">$9,150</span></div>
+</div>
+<div class="kpi-actions">
+<button class="action-btn" type="button" data-action="kpiRevenueBreakdown">Breakdown</button>
+<button class="action-btn secondary" type="button" data-action="kpiRevenueBoost">Boost Plan</button>
+</div>
+</div>
+<div class="card kpi-card">
+<h2>📋 Active Jobs</h2>
+<div class="metric-value">14</div>
+<div class="metric-label">3 starting this week</div>
+<div class="kpi-meta">
+<div class="kpi-meta-row"><span>Revenue in play</span><span class="kpi-value-good">$92,400</span></div>
+<div class="kpi-meta-row"><span>Cost risk</span><span class="kpi-value-bad">$4,650</span></div>
+</div>
+<div class="kpi-actions">
+<button class="action-btn" type="button" data-action="kpiJobsViewAll">View All</button>
+<button class="action-btn secondary" type="button" data-action="kpiJobsPriority">Priority</button>
+</div>
+</div>
+<div class="card kpi-card">
+<h2>⚠️ Change Orders</h2>
+<div class="metric-value metric-warning">7</div>
+<div class="metric-label">$12,300 pending approval</div>
+<div class="kpi-meta">
+<div class="kpi-meta-row"><span>Captured</span><span class="kpi-value-good">$6,850</span></div>
+<div class="kpi-meta-row"><span>At risk</span><span class="kpi-value-bad">$5,450</span></div>
+</div>
+<div class="kpi-actions">
+<button class="action-btn" type="button" data-action="kpiCOReviewAll">Review All</button>
+<button class="action-btn secondary" type="button" data-action="kpiCOUrgent">Urgent</button>
+</div>
+</div>
+<div class="card kpi-card">
+<h2>⏱️ Crew Utilization</h2>
+<div class="metric-value metric-warning">82%</div>
+<div class="metric-label">5 of 7 crews active</div>
+<div class="kpi-meta">
+<div class="kpi-meta-row"><span>Recovered</span><span class="kpi-value-good">$18,400</span></div>
+<div class="kpi-meta-row"><span>Lost today</span><span class="kpi-value-bad">$850</span></div>
+</div>
+<div class="kpi-actions">
+<button class="action-btn" type="button" data-action="kpiCrewStatus">Status</button>
+<button class="action-btn secondary" type="button" data-action="kpiCrewOptimize">Optimize</button>
+</div>
+</div>
 </div>
 
 <div class="grid">
@@ -232,6 +280,6 @@
 </div>
 </div>
 
-<script src="./app.js"></script>
+<script src="./docs/glazing-app.js"></script>
 </body>
 </html>
