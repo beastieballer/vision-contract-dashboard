@@ -34,15 +34,15 @@ const scripts = {
   },
   kpiJobsViewAll: {
     title: 'Active Jobs — Full List',
-    detail: `#2847 Storefront Install — On site\n#2849 Curtain Wall Repair — On site\n#2851 Window Replacement — On site\n#2853 Glass Railing — Scheduled\n#2854 Storefront — Scheduled\n#2856 Window Install — Fabrication\n#2857 Mirror Wall — On site\n#2858 Curtain Wall — On site\n#2859 Shower Glass — Scheduled\n#2860 Commercial Glazing — Scheduled\n#2861 Storefront — Fabrication\n#2862 Window Retrofit — Fabrication\n#2863 Glass Canopy — Scheduled\n#2864 Partition — Scheduled`
+    detail: `#2847 Storefront Install — On site ($12,400)\n#2851 Window Replacement — On site ($8,700)\n#2858 Curtain Wall — On site ($22,400)\n#2862 Window Retrofit — Fabrication ($6,200)`
   },
   kpiJobsPriority: {
     title: 'Priority Jobs — Attention Needed',
-    detail: `#2849 Curtain Wall Repair — labor overrun risk\n#2851 Window Replacement — access delays\n#2854 Storefront — material ETA risk`
+    detail: `#2849 Curtain Wall Repair — labor overrun risk\n#2851 Window Replacement — access delays\n#2854 Storefront — material ETA risk\n#2858 Curtain Wall — crane window tight`
   },
   kpiCOReviewAll: {
-    title: 'Change Orders — All 7',
-    detail: `CO-142 Fells Point variance — $850\nCO-143 Canton Lofts low-E — $3,200\nCO-144 Harbor East add-on — $2,150\nCO-145 Towson remeasure — $1,100\nCO-146 Federal Hill patch — $850\nCO-147 Dundalk add panels — $2,050\nCO-148 BWI sealant spec — $2,100`
+    title: 'Change Orders — All 5',
+    detail: `CO-142 Fells Point variance — $850\nCO-143 Canton Lofts low-E — $3,200\nCO-144 Harbor East add-on — $2,150\nCO-145 Towson remeasure — $1,100\nCO-148 BWI sealant spec — $2,100`
   },
   kpiCOUrgent: {
     title: 'Change Orders — Urgent Top 3',
@@ -50,7 +50,7 @@ const scripts = {
   },
   kpiCrewStatus: {
     title: 'Crew Utilization — Full Breakdown',
-    detail: `Team Alpha: Active — Harbor East\nTeam Bravo: Active — Towson\nTeam Charlie: Idle 4.8 hrs — staging\nTeam Delta: Active — Inner Harbor\nTeam Echo: Active — Bel Air\nTeam Foxtrot: Active — Lutherville\nTeam Golf: Active — Dundalk`
+    detail: `Team Alpha — Harbor East (Active)\nTeam Bravo — Towson (Active)\nTeam Charlie — Staging (Idle 4.8 hrs)\nTeam Delta — Inner Harbor (Active)\nTeam Echo — Bel Air (Active)`
   },
   kpiCrewOptimize: {
     title: 'Crew Optimization Actions',
@@ -671,7 +671,14 @@ async function loadWeather() {
     const sunrises = daily.sunrise || [];
     const sunsets = daily.sunset || [];
 
-    const rows = times.map((time, index) => {
+    const today = new Date();
+    const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const visibleIndexes = times.map((time, index) => ({ time, index })).filter(({ time }) => {
+      const date = new Date(time);
+      return date >= startOfToday;
+    });
+
+    const rows = visibleIndexes.map(({ time, index }) => {
       const label = getDayLabel(time);
       const high = highs[index];
       const low = lows[index];

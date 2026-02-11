@@ -18,6 +18,10 @@ header h1 span.glow{color:var(--cyan);text-shadow:0 0 20px var(--cyan-dim)}
 .card:hover::before{opacity:1}
 .kpi-card{text-align:left;color:inherit;font:inherit}
 .kpi-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.kpi-meta{margin-top:10px;display:grid;gap:6px}
+.kpi-meta-row{display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);font-family:'JetBrains Mono',monospace}
+.kpi-value-good{color:var(--green);font-weight:700}
+.kpi-value-bad{color:var(--red);font-weight:700}
 .card h2{color:var(--text-secondary);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px;font-family:'JetBrains Mono',monospace}
 .metric-value{font-size:32px;font-weight:800;font-family:'JetBrains Mono',monospace;background:linear-gradient(135deg,var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .metric-warning{color:var(--orange);-webkit-text-fill-color:var(--orange)}
